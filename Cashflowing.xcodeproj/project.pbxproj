@@ -20,6 +20,7 @@
 		6BCEABD32C6111E700AD6F9E /* AddNewFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BCEABC62C6111E700AD6F9E /* AddNewFlow.swift */; };
 		6BCEABD42C6111E700AD6F9E /* TotalAmount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BCEABC72C6111E700AD6F9E /* TotalAmount.swift */; };
 		6BCEABD92C621DD800AD6F9E /* FlowTableRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BCEABD82C621DD800AD6F9E /* FlowTableRow.swift */; };
+		6BCEABDB2C62662E00AD6F9E /* EditFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BCEABDA2C62662E00AD6F9E /* EditFlowView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +40,7 @@
 		6BCEABC72C6111E700AD6F9E /* TotalAmount.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TotalAmount.swift; sourceTree = "<group>"; };
 		6BCEABD62C61129100AD6F9E /* Cashflowing-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Cashflowing-Bridging-Header.h"; sourceTree = "<group>"; };
 		6BCEABD82C621DD800AD6F9E /* FlowTableRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowTableRow.swift; sourceTree = "<group>"; };
+		6BCEABDA2C62662E00AD6F9E /* EditFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditFlowView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,6 +92,7 @@
 				6BCEABBA2C6111E700AD6F9E /* FlowsTableView.swift */,
 				6BCEABBB2C6111E700AD6F9E /* HomeView.swift */,
 				6BCEABBC2C6111E700AD6F9E /* SettingsView.swift */,
+				6BCEABDA2C62662E00AD6F9E /* EditFlowView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -203,6 +206,7 @@
 				6BCEABD02C6111E700AD6F9E /* DocumentPicker.swift in Sources */,
 				6BCEABCB2C6111E700AD6F9E /* FlowsTableView.swift in Sources */,
 				6BCEABD42C6111E700AD6F9E /* TotalAmount.swift in Sources */,
+				6BCEABDB2C62662E00AD6F9E /* EditFlowView.swift in Sources */,
 				6BCEABD22C6111E700AD6F9E /* FlowStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -12,7 +12,7 @@ struct FlowTableRow: View {
     @ObservedObject var store: FlowStore
     
     var body: some View {
-        NavigationLink(destination: FlowDetailView(flow: flow)) {
+        NavigationLink(destination: FlowDetailView(store: store, flow: flow)) {
             HStack {
                 Text("\(flow.dateString): \(flow.amountString)")
                 Text("\(flow.descriptionEmoji) \(truncateWithEllipsis(flow.description))")

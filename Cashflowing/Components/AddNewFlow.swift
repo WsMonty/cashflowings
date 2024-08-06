@@ -12,16 +12,10 @@ struct AddNewFlow: View {
     @State var amount: String = ""
     @State var date: Date = Date()
     @State var description: String = ""
-    
-    private func addFlow() async {
-        let newFlow: Flow = Flow(amount: Double(amount) ?? 0.00, date: date, description: description)
-        Task {
-            try await store.writeNewFlow(flow: newFlow)
-        }
-        amount = ""
-        date = Date()
-        description = ""
-    }
+    var isEditMode: Bool
+    var oldFlow: Flow?
+    @Binding var isEditSheetOpen: Bool
+    @Binding var editedFlow: Flow
     
     var body: some View {
         GeometryReader { geometry in
@@ -42,7 +36,7 @@ struct AddNewFlow: View {
                         .frame(maxHeight: 30)
                     DatePicker("Date", selection: $date, displayedComponents: .date)
                         .labelsHidden()
-                   
+                    
                     
                 }
                 TextField("Description", text: Binding(get: {description}, set: {description = String($0)}))
@@ -52,13 +46,16 @@ struct AddNewFlow: View {
                     .cornerRadius(7.5)
                 Button(action: {
                     Task {
+                        if isEditMode {
+                            try await store.editFlow(oldFlow: oldFlow!, newFlow: Flow(amount: Double(amount) ?? 0.00, date: date, description: description))
+                            editedFlow = Flow(amount: Double(amount) ?? 0.00, date: date, description: description)
+                            isEditSheetOpen = false
+                            return
+                        }
                         await addFlow()
                     }
-                    Task {
-                        try await store.getFlows()
-                    }
                 }) {
-                    Text("Add \(getButtonText())")
+                    Text(getButtonText())
                         .padding(.horizontal, 15)
                         .padding(.vertical, 7.5)
                 }
@@ -75,14 +72,31 @@ struct AddNewFlow: View {
                     date = store.copiedData.date
                 }
             }
+            .onAppear {
+                if isEditMode {
+                    amount = String(oldFlow!.amount)
+                    date = oldFlow!.date
+                    description = oldFlow!.description
+                }
+            }
         }
+    }
+    
+    private func addFlow() async {
+        let newFlow: Flow = Flow(amount: Double(amount) ?? 0.00, date: date, description: description)
+        Task {
+            try await store.writeNewFlow(flow: newFlow)
+        }
+        amount = ""
+        date = Date()
+        description = ""
     }
     
     private func validateInput() {
         let filtered = amount.filter { "0123456789.-".contains($0) }
         var result = filtered
         if filtered.contains(".") {
-           let splitString = filtered.split(separator: ".")
+            let splitString = filtered.split(separator: ".")
             let beforeComma = String(splitString[0])
             let afterComma = splitString.count > 1 ? String(splitString[1].prefix(2)) : ""
             result = "\(beforeComma).\(afterComma)"
@@ -97,9 +111,10 @@ struct AddNewFlow: View {
     }
     
     private func getButtonText() -> String {
-        if amount.isEmpty { return "" }
+        if amount.isEmpty { return "Add" }
+        if isEditMode { return "Confirm" }
         if (Double(amount) != nil) {
-            return Double(amount)! > 0 ? "Income" : "Expense"
+            return Double(amount)! > 0 ? "Add Income" : "Add Expense"
         }
         return ""
     }
@@ -107,7 +122,7 @@ struct AddNewFlow: View {
 
 
 #Preview {
-    AddNewFlow(store: FlowStore())
+    AddNewFlow(store: FlowStore(), isEditMode: false, oldFlow: Flow(amount: 10.00, description: "Old flow"), isEditSheetOpen: .constant(false), editedFlow: .constant(Flow(amount: 0.00)))
         .background(.mainBG)
 }
-    
+

@@ -28,7 +28,7 @@ struct HomeView: View {
                             .frame(width: geometry.size.width, height: geometry.size.height * 0.65)
                             .background(Color.gray.opacity(0.05))
                         Divider()
-                        AddNewFlow(store: store)
+                        AddNewFlow(store: store, isEditMode: false, isEditSheetOpen: .constant(false), editedFlow: .constant(Flow(amount: 0.00)))
                             .frame(width: geometry.size.width, height: geometry.size.height * 0.25)
                             .background(Color.gray.opacity(0.05))
                     }

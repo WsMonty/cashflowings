@@ -87,13 +87,18 @@ class FlowStore: ObservableObject {
         }
     }
     
-    func editFlow(oldFlow: Flow, newFlow: Flow) {
+    func editFlow(oldFlow: Flow, newFlow: Flow) async throws {
+        if oldFlow == newFlow {
+            print("Flows were the same")
+            return
+        }
         if let index = flows.firstIndex(of: oldFlow) {
             flows.remove(at: index)
         }
         flows.append(newFlow)
         do {
             try replaceCSVContent()
+            try await self.getFlows()
         } catch {
             print("Error replacing content of csv file. Reason: \(error)")
         }
