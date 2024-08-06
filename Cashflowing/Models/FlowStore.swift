@@ -10,9 +10,17 @@ import UIKit
 import MobileCoreServices
 import SwiftUI
 
+enum DataType {
+    case allFlows
+    case income
+    case expenses
+}
+
 @MainActor
 class FlowStore: ObservableObject {
     @Published var flows: [Flow] = Flow.sampleData
+    @Published var copiedData: Flow = Flow(amount: 0)
+    @Published var dataType: DataType = .allFlows
     
     private static func getFileURL() throws -> URL {
         let fileManager = FileManager.default

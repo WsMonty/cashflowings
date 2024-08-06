@@ -93,7 +93,7 @@ struct DocumentPickerView: UIViewControllerRepresentable {
             let tempDirectory = FileManager.default.temporaryDirectory
             let tempFileURL = tempDirectory.appendingPathComponent("CashflowData_\(dateString).csv")
             
-            var csvString = ""
+            var csvString = "Date,Amount,Description\n"
             for flow in store.flows {
                 let line = "\(flow.dateString),\(flow.amountString),\(flow.description)\n"
                 csvString.append(line)

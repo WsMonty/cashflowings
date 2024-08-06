@@ -9,20 +9,73 @@ import SwiftUI
 
 struct FlowsTableView: View {
     @ObservedObject var store: FlowStore
-   
     
     var body: some View {
         NavigationStack {
-            List(store.flows, id: \.id) { flow in
-                FlowTableRow(flow: flow, store: store)
+            VStack(spacing: 0) {
+                HStack(spacing: 0) {
+                    Button(action: { store.dataType = .allFlows }) {
+                        Text("All")
+                    }
+                    .customButtonStyle(isActive: store.dataType == .allFlows)
+                    Button(action: { store.dataType = .income }) {
+                        Text("Income")
+                    }
+                    .customButtonStyle(isActive: store.dataType == .income)
+                    Button(action: { store.dataType = .expenses }) {
+                        Text("Expenses")
+                    }
+                    .customButtonStyle(isActive: store.dataType == .expenses)
+                }
+                .padding(.horizontal, 10)
+                
+                List(store.flows.filter {
+                    switch store.dataType {
+                    case .allFlows:
+                        $0.amount.isNormal
+                    case .income:
+                        $0.amount > 0
+                    case .expenses:
+                        $0.amount < 0
+                    }
+                }, id: \.id) { flow in
+                    FlowTableRow(flow: flow, store: store)
+                        .listRowSeparator(.hidden)
+                        
+                }
+                .scrollContentBackground(.hidden)
+                .padding(.horizontal, -10)
+                .padding(.vertical, 0)
             }
-            .scrollContentBackground(.hidden)
         }
     }
 }
 
 #Preview {
     FlowsTableView(store: FlowStore())
-        .background(.mainBG)
 }
 
+struct CustomButtonStyle: ViewModifier {
+    var isActive: Bool
+    
+    func body(content: Content) -> some View {
+        content
+            .padding(.horizontal, 20)
+            .padding(.vertical, 10)
+            .frame(width: (UIScreen.main.bounds.width / 3) - 8)
+            .background(.clear)
+            .overlay(alignment: .bottom) {
+                isActive ? Rectangle()
+                    .frame(height: 2)
+                    .foregroundColor(.blue) : nil
+            }
+            .foregroundColor(.mainText)
+            .cornerRadius(5)
+    }
+}
+
+extension View {
+    func customButtonStyle(isActive: Bool) -> some View {
+        self.modifier(CustomButtonStyle(isActive: isActive))
+    }
+}

@@ -18,11 +18,16 @@ struct FlowTableRow: View {
                 Text("\(flow.descriptionEmoji) \(truncateWithEllipsis(flow.description))")
                     .font(.caption)
             }
-            .swipeActions {
+            .swipeActions(edge: .trailing) {
                 Button(role: .destructive) {
                     deleteFlow()
                 } label: {
                     Label("Delete", systemImage: "minus.square.fill")
+                }
+            }
+            .swipeActions(edge: .leading) {
+                Button(action: { store.copiedData = flow }) {
+                    Label("Copy", systemImage: "plus.square.on.square")
                 }
             }
         }

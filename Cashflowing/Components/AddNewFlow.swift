@@ -13,7 +13,6 @@ struct AddNewFlow: View {
     @State var date: Date = Date()
     @State var description: String = ""
     
-    
     private func addFlow() async {
         let newFlow: Flow = Flow(amount: Double(amount) ?? 0.00, date: date, description: description)
         Task {
@@ -69,6 +68,13 @@ struct AddNewFlow: View {
             }
             .foregroundColor(.mainText)
             .padding()
+            .onChange(of: store.copiedData, initial: false) {
+                if store.copiedData.amount != 0.0 {
+                    amount = store.copiedData.amountString
+                    description = store.copiedData.description
+                    date = store.copiedData.date
+                }
+            }
         }
     }
     

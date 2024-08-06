@@ -29,7 +29,7 @@ struct SettingsView: View {
                 .sheet(isPresented: $showDocumentPicker) {
                     DocumentPickerView(store: store, showDocumentPicker: $showDocumentPicker, pickerMode: pickerMode)
                 }
-                Text("Exports the currently used CVS with all the chash flows to the local download folder.")
+                Text("Exports the currently used CVS with all the chash flows to a chosen folder.")
                     .font(.caption)
                     .padding(.vertical, 10)
                 Divider()
