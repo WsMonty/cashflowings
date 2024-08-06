@@ -13,7 +13,7 @@ struct CashflowApp: App {
     
     var body: some Scene {
         WindowGroup {
-            HomeView(store: store, flows: $store.flows)
+            HomeView(store: store)
                 .task {
                     do {
                         try await store.getFlows()

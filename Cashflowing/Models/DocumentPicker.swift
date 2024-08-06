@@ -35,7 +35,7 @@ class DocumentPickerCoordinator: NSObject, UIDocumentPickerDelegate, UINavigatio
             case .importDocument:
                 copyFileToDocuments(fileURL: selectedFileURL)
             case .exportDocument:
-                exportCSV(to: selectedFileURL)
+               return
             }
         }
     
@@ -66,20 +66,6 @@ class DocumentPickerCoordinator: NSObject, UIDocumentPickerDelegate, UINavigatio
             print("Error copying file: \(error)")
         }
     }
-    
-    private func exportCSV(to fileURL: URL) {
-            var csvString = ""
-            for flow in store.flows {
-                let line = "\(flow.dateString),\(flow.amountString),\(flow.description)\n"
-                csvString.append(line)
-            }
-            do {
-                try csvString.write(to: fileURL, atomically: true, encoding: .utf8)
-                print("File created at: \(fileURL.path)")
-            } catch {
-                print("Failed to create file: \(error)")
-            }
-        }
 }
 
 struct DocumentPickerView: UIViewControllerRepresentable {
@@ -107,9 +93,13 @@ struct DocumentPickerView: UIViewControllerRepresentable {
             let tempDirectory = FileManager.default.temporaryDirectory
             let tempFileURL = tempDirectory.appendingPathComponent("CashflowData_\(dateString).csv")
             
-            let initialData = ""
+            var csvString = ""
+            for flow in store.flows {
+                let line = "\(flow.dateString),\(flow.amountString),\(flow.description)\n"
+                csvString.append(line)
+            }
             do {
-                try initialData.write(to: tempFileURL, atomically: true, encoding: .utf8)
+                try csvString.write(to: tempFileURL, atomically: true, encoding: .utf8)
             } catch {
                 print("Failed to write temporary file: \(error)")
             }

@@ -25,9 +25,11 @@ struct TotalAmount: View {
             Text("Total amount")
                 .font(.caption)
         }
+        .foregroundColor(.mainText)
     }
 }
 
 #Preview {
     TotalAmount(flows: .constant(Flow.sampleData))
+        .background(.mainBG)
 }

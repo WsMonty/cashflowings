@@ -38,12 +38,12 @@ struct AddNewFlow: View {
                             .background(.greyBG)
                             .cornerRadius(7.5)
                     }
-                    .frame(width: geometry.size.width * 0.45)
+                    .frame(width: geometry.size.width * 0.57)
                     Divider()
                         .frame(maxHeight: 30)
                     DatePicker("Date", selection: $date, displayedComponents: .date)
                         .labelsHidden()
-                        .frame(width: geometry.size.width * 0.43)
+                   
                     
                 }
                 TextField("Description", text: Binding(get: {description}, set: {description = String($0)}))
@@ -67,6 +67,7 @@ struct AddNewFlow: View {
                 .background(getBackgroundColor())
                 .cornerRadius(7.5)
             }
+            .foregroundColor(.mainText)
             .padding()
         }
     }
@@ -101,5 +102,6 @@ struct AddNewFlow: View {
 
 #Preview {
     AddNewFlow(store: FlowStore())
+        .background(.mainBG)
 }
     

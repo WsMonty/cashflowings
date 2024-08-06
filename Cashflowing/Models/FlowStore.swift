@@ -12,7 +12,7 @@ import SwiftUI
 
 @MainActor
 class FlowStore: ObservableObject {
-    @Published var flows: [Flow] = []
+    @Published var flows: [Flow] = Flow.sampleData
     
     private static func getFileURL() throws -> URL {
         let fileManager = FileManager.default
@@ -46,7 +46,7 @@ class FlowStore: ObservableObject {
                 }
             }
             
-            self.flows = loadedFlows
+            self.flows = loadedFlows.sorted(by: { $0.date < $1.date })
         } catch {
             print("Error loading or creating file: \(error)")
             throw error
@@ -65,6 +65,44 @@ class FlowStore: ObservableObject {
             try await self.getFlows()
         } catch {
             print("Error updating file: \(error)")
+        }
+    }
+    
+    func deleteFlow(flow: Flow) {
+        if let index = flows.firstIndex(of: flow) {
+            flows.remove(at: index)
+        }
+        do {
+            try replaceCSVContent()
+        } catch {
+            print("Error replacing content of csv file. Reason: \(error)")
+        }
+    }
+    
+    func editFlow(oldFlow: Flow, newFlow: Flow) {
+        if let index = flows.firstIndex(of: oldFlow) {
+            flows.remove(at: index)
+        }
+        flows.append(newFlow)
+        do {
+            try replaceCSVContent()
+        } catch {
+            print("Error replacing content of csv file. Reason: \(error)")
+        }
+    }
+    
+    private func replaceCSVContent() throws {
+        let fileURL = try Self.getFileURL()
+        
+        var csvString = ""
+        for flow in flows.sorted(by: { $0.date < $1.date }) {
+            let line = "\(flow.dateString),\(flow.amountString),\(flow.description)\n"
+            csvString.append(line)
+        }
+        do {
+            try csvString.write(to: fileURL, atomically: true, encoding: .utf8)
+        } catch {
+            print("Error replacing content of csv file. Reason: \(error)")
         }
     }
 }

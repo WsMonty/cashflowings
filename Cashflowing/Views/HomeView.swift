@@ -9,18 +9,22 @@ import SwiftUI
 
 struct HomeView: View {
     @ObservedObject var store: FlowStore
-    @Binding var flows: [Flow]
     @State var isSettingsOpen: Bool = false
+    
+    init(store: FlowStore) {
+        UIBarButtonItem.appearance().tintColor = .mainText
+        self.store = store
+    }
     
     var body: some View {
             NavigationStack {
                 GeometryReader { geometry in
                     VStack(spacing: 0) {
-                        TotalAmount(flows: $flows)
+                        TotalAmount(flows: $store.flows)
                             .frame(width: geometry.size.width, height: geometry.size.height * 0.1)
                             .background(Color.gray.opacity(0.05))
 
-                        FlowsTableView(flows: $flows)
+                        FlowsTableView(store: store)
                             .frame(width: geometry.size.width, height: geometry.size.height * 0.65)
                             .background(Color.gray.opacity(0.05))
                         Divider()
@@ -28,22 +32,23 @@ struct HomeView: View {
                             .frame(width: geometry.size.width, height: geometry.size.height * 0.25)
                             .background(Color.gray.opacity(0.05))
                     }
+                    .background(.mainBG)
                     .frame(width: geometry.size.width, height: geometry.size.height)
                     .toolbar {
                         Button(action: { isSettingsOpen = true }) {
                             Image(systemName: "gear")
                         }
+                        .foregroundColor(.mainText)
                     }
                 }
                 .sheet(isPresented: $isSettingsOpen) {
-                    SettingsView(store: store)
+                    SettingsView(store: store, isSettingsOpen: $isSettingsOpen)
                 }
             }
+            .foregroundColor(.mainText)
         }
-        
-       
 }
 
 #Preview {
-    HomeView(store: FlowStore(), flows: .constant(Flow.sampleData))
+    HomeView(store: FlowStore())
 }

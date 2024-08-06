@@ -91,7 +91,7 @@ extension Flow {
         Flow(amount: -35.50, date: Date("12.04.2024")),
         Flow(amount: -23.55, date: Date("25.07.2024")),
         Flow(amount: -100.00, date: Date("11.04.2024"), description: "Train ticket"),
-    ]
+    ].sorted(by: { $0.date < $1.date })
 }
 
 extension Date {
