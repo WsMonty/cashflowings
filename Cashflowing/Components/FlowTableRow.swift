@@ -9,42 +9,37 @@ import SwiftUI
 
 struct FlowTableRow: View {
     var flow: Flow
-    @ObservedObject var store: FlowStore
     
     var body: some View {
-        NavigationLink(destination: FlowDetailView(store: store, flow: flow)) {
+        VStack(alignment: .leading, spacing: 10) {
             HStack {
-                Text("\(flow.dateString): \(flow.amountString)")
+                HStack() {
+                    Image(systemName: "calendar")
+                    Text("\(flow.dateString)")
+                    Spacer()
+                }
+                .frame(width: UIScreen.main.bounds.width / 2.5)
+                .padding(.leading, 20)
+                HStack {
+                    Image(systemName: "dollarsign.square")
+                    Text("\(flow.amountString)")
+                    Spacer()
+                }
+                .frame(width: UIScreen.main.bounds.width / 3)
+              
+            }
+            if !flow.description.isEmpty {
                 Text("\(flow.descriptionEmoji) \(truncateWithEllipsis(flow.description))")
                     .font(.caption)
-            }
-            .swipeActions(edge: .trailing) {
-                Button(role: .destructive) {
-                    deleteFlow()
-                } label: {
-                    Label("Delete", systemImage: "minus.square.fill")
-                }
-            }
-            .swipeActions(edge: .leading) {
-                Button(action: { store.copiedData = flow }) {
-                    Label("Copy", systemImage: "plus.square.on.square")
-                }
+                    .padding(.leading, 20)
             }
         }
         .foregroundColor(.black)
-        .listRowBackground(getTextColor(type: flow.type))
-       
+        .padding(.horizontal, 10)
+        .padding(.vertical, 5)
     }
     
-    private func deleteFlow() {
-        store.deleteFlow(flow: flow)
-    }
-    
-    private func getTextColor(type: FlowType) -> Color {
-        return type == .income ? .income : .expense
-    }
-    
-    private func truncateWithEllipsis(_ input: String, limit: Int = 15) -> String {
+    private func truncateWithEllipsis(_ input: String, limit: Int = 35) -> String {
         if input.count > limit {
             let endIndex = input.index(input.startIndex, offsetBy: limit)
             return String(input[..<endIndex]) + "..."
@@ -55,6 +50,7 @@ struct FlowTableRow: View {
 }
 
 #Preview {
-    FlowTableRow(flow: Flow(amount: 100, description: "Concert payment"), store: FlowStore())
+    FlowTableRow(flow: Flow(amount: 100, description: "Concert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert payment"))
         .background(.income)
+        .previewLayout(.fixed(width: 400, height: 60))
 }

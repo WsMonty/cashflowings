@@ -12,7 +12,7 @@ struct EditFlowView: View {
     var flow: Flow
     @Binding var isEditSheetOpen: Bool
     @State var editedFlow: Flow
-    
+
     var body: some View {
         NavigationStack {
             AddNewFlow(store: store, isEditMode: true, oldFlow: flow, isEditSheetOpen: $isEditSheetOpen, editedFlow: $editedFlow)
@@ -31,6 +31,7 @@ struct EditFlowView: View {
                         }
                     }
                 }
+                .background(.mainBG)
         }
     }
 }

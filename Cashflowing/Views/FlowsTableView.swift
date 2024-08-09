@@ -15,15 +15,15 @@ struct FlowsTableView: View {
             VStack(spacing: 0) {
                 HStack(spacing: 0) {
                     Button(action: { store.dataType = .allFlows }) {
-                        Text("All")
+                        Text("allFlows")
                     }
                     .customButtonStyle(isActive: store.dataType == .allFlows)
                     Button(action: { store.dataType = .income }) {
-                        Text("Income")
+                        Text("income")
                     }
                     .customButtonStyle(isActive: store.dataType == .income)
                     Button(action: { store.dataType = .expenses }) {
-                        Text("Expenses")
+                        Text("expenses")
                     }
                     .customButtonStyle(isActive: store.dataType == .expenses)
                 }
@@ -39,15 +39,33 @@ struct FlowsTableView: View {
                         $0.amount < 0
                     }
                 }, id: \.id) { flow in
-                    FlowTableRow(flow: flow, store: store)
-                        .listRowSeparator(.hidden)
-                        
+                    NavigationLink(destination: FlowDetailView(store: store, flow: flow)) {
+                        FlowTableRow(flow: flow)
+                            .listRowSeparator(.hidden)
+                    }
+                    .listRowBackground(getTextColor(type: flow.type))
+                    .swipeActions(edge: .trailing) {
+                        Button(role: .destructive) {
+                            store.deleteFlow(flow: flow)
+                        } label: {
+                            Label("Delete", systemImage: "minus.square.fill")
+                        }
+                    }
+                    .swipeActions(edge: .leading) {
+                        Button(action: { store.copiedData = flow }) {
+                            Label("Copy", systemImage: "plus.square.on.square")
+                        }
+                    }
                 }
                 .scrollContentBackground(.hidden)
                 .padding(.horizontal, -10)
-                .padding(.vertical, 0)
             }
+            .background(.mainBG)
         }
+    }
+    
+    private func getTextColor(type: FlowType) -> Color {
+        return type == .income ? .income : .expense
     }
 }
 
@@ -60,6 +78,7 @@ struct CustomButtonStyle: ViewModifier {
     
     func body(content: Content) -> some View {
         content
+            .font(.system(size: 15))
             .padding(.horizontal, 20)
             .padding(.vertical, 10)
             .frame(width: (UIScreen.main.bounds.width / 3) - 8)

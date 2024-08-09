@@ -17,9 +17,15 @@ struct FlowDetailView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color.mainBG
+                Rectangle()
+                    .fill(.mainBG)
                     .ignoresSafeArea()
-                VStack(alignment: .leading) {
+                RoundedRectangle(cornerRadius: 5)
+                    .fill(usedFlow.amount > 0 ? .income : .expense)
+                    .frame(width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.width)
+                    .opacity(0.9)
+                    .shadow(color: .gray, radius: 1)
+                VStack(alignment: .center) {
                     VStack(alignment: .leading, spacing: 10) {
                         HStack {
                             Image(systemName: "calendar")
@@ -35,14 +41,16 @@ struct FlowDetailView: View {
                             Text("\(usedFlow.description.isEmpty ? "No description" : usedFlow.description)")
                         }
                     }
-                    .foregroundColor(.mainText)
+                    .frame(maxWidth: UIScreen.main.bounds.width * 0.8)
+                    .foregroundColor(.black)
                     .padding(.bottom, 20)
                     Button(action: { isEditSheetOpen = true }) {
                         HStack {
                             Image(systemName: "pencil")
-                            Text("Edit")
+                            Text("edit")
                         }
                     }
+                    .foregroundColor(.black)
                     .font(.system(size: 15))
                     .padding(.horizontal, 20)
                     .padding(.vertical, 10)
@@ -54,7 +62,6 @@ struct FlowDetailView: View {
                         EditFlowView(store: store, flow: flow, isEditSheetOpen: $isEditSheetOpen, editedFlow: editedFlow)
                     }
                 }
-                
             }
         }
         .onAppear {
@@ -67,5 +74,5 @@ struct FlowDetailView: View {
 }
 
 #Preview {
-    FlowDetailView(store: FlowStore(), flow: Flow(amount: 100.00, description: "Concert"))
+    FlowDetailView(store: FlowStore(), flow: Flow(amount: 100.00, description: "Long description"))
 }

@@ -17,9 +17,10 @@ struct Flow: Identifiable, Codable, Hashable {
     var amount: Double
     var amountString: String {
         get {
-            String(format: "%.2f", amount) + " €"
+            getAmountString()
         }
     }
+    let currency: String
     let date: Date
     var dateString: String {
         get {
@@ -33,21 +34,12 @@ struct Flow: Identifiable, Codable, Hashable {
         }
     }
     
-    
-    
-    
-    init(id: UUID = UUID(), amount: Double, date: Date = Date(), description: String = "") {
+    init(id: UUID = UUID(), amount: Double, currency: String = "€", date: Date = Date(), description: String = "") {
         self.id = id
         self.amount = amount
+        self.currency = currency
         self.date = date
         self.description = description
-    }
-    
-    func formatDate(date: Date) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd.MM.yyyy"
-        
-        return dateFormatter.string(from: date)
     }
     
     func formatDateFromString(date: String) -> Date {
@@ -75,6 +67,10 @@ struct Flow: Identifiable, Codable, Hashable {
         }
         
         return ""
+    }
+    
+    private func getAmountString() -> String {
+        return  amount < 0 ? String(format: "%.2f", amount) + " \(currency)" : " " + String(format: "%.2f", amount) + " \(currency)"
     }
 }
 

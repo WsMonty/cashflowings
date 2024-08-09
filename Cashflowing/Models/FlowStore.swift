@@ -21,6 +21,7 @@ class FlowStore: ObservableObject {
     @Published var flows: [Flow] = Flow.sampleData
     @Published var copiedData: Flow = Flow(amount: 0)
     @Published var dataType: DataType = .allFlows
+    @Published var locale: Locale = .current
     
     private static func getFileURL() throws -> URL {
         let fileManager = FileManager.default
@@ -44,12 +45,16 @@ class FlowStore: ObservableObject {
                 let separatedValues = string.split(separator: ",")
                 let dateFormatter = DateFormatter()
                 dateFormatter.dateFormat = "dd.MM.yyyy"
+                let amountCharacterSet = "0123456789."
+                let currencyCharacterSet =  "€$£"
                 
                 if let dateString = separatedValues.first,
                    let date = dateFormatter.date(from: String(dateString)),
-                   let amount = Double(String(separatedValues[1]).replacingOccurrences(of: "€", with: "").trimmingCharacters(in: .whitespaces)) {
+                   let amount = Double(String(separatedValues[1]).filter { amountCharacterSet.contains($0) }) {
                     let description = separatedValues.count > 2 ? String(separatedValues[2]) : ""
-                    let flow = Flow(amount: amount, date: date, description: description)
+                    let currencyString: String = String(separatedValues[1].filter { currencyCharacterSet.contains($0) })
+                    let currency = currencyString.isEmpty ? GlobalValues.defaultCurrency : currencyString
+                    let flow = Flow(amount: amount, currency: currency, date: date, description: description)
                     loadedFlows.append(flow)
                 }
             }
@@ -117,6 +122,18 @@ class FlowStore: ObservableObject {
         } catch {
             print("Error replacing content of csv file. Reason: \(error)")
         }
+    }
+    
+    func changeLocale(locale: Locale) {
+        UserDefaults.standard.set(locale.identifier, forKey: "selectedLocale")
+        self.locale = locale
+    }
+    
+    func loadSavedLocale() -> Locale {
+        if let savedLocaleIdentifier = UserDefaults.standard.string(forKey: "selectedLocale") {
+            return Locale(identifier: savedLocaleIdentifier)
+        }
+        return .current
     }
 }
 

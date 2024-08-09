@@ -12,8 +12,8 @@ struct HomeView: View {
     @State var isSettingsOpen: Bool = false
     
     init(store: FlowStore) {
-        UIBarButtonItem.appearance().tintColor = .mainText
         self.store = store
+        UIBarButtonItem.appearance().tintColor = .mainText
     }
     
     var body: some View {
@@ -22,15 +22,11 @@ struct HomeView: View {
                     VStack(spacing: 0) {
                         TotalAmount(flows: $store.flows)
                             .frame(width: geometry.size.width, height: geometry.size.height * 0.1)
-                            .background(Color.gray.opacity(0.05))
-
                         FlowsTableView(store: store)
                             .frame(width: geometry.size.width, height: geometry.size.height * 0.65)
-                            .background(Color.gray.opacity(0.05))
                         Divider()
                         AddNewFlow(store: store, isEditMode: false, isEditSheetOpen: .constant(false), editedFlow: .constant(Flow(amount: 0.00)))
                             .frame(width: geometry.size.width, height: geometry.size.height * 0.25)
-                            .background(Color.gray.opacity(0.05))
                     }
                     .background(.mainBG)
                     .frame(width: geometry.size.width, height: geometry.size.height)
@@ -43,8 +39,11 @@ struct HomeView: View {
                 }
                 .sheet(isPresented: $isSettingsOpen) {
                     SettingsView(store: store, isSettingsOpen: $isSettingsOpen)
+                        
                 }
             }
+            .environment(\.locale, store.locale)
+            .background(.mainBG)
             .foregroundColor(.mainText)
         }
 }

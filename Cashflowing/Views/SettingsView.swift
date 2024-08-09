@@ -16,40 +16,32 @@ struct SettingsView: View {
     
     var body: some View {
         NavigationStack {
-            VStack {
-                Button(action: {
+            VStack(alignment: .leading) {
+                LocaleSelector(store: store)
+                Divider()
+                    .padding(5)
+                StyledButton(isSheetOpen: $showDocumentPicker, action: {
                     pickerMode = .exportDocument
                     showDocumentPicker = true
-                }) {
-                    Text("Export CVS")
-                }
-                .padding(20)
-                .background(.expense)
-                .cornerRadius(10)
+                }, buttonText: "exportCSV")
                 .sheet(isPresented: $showDocumentPicker) {
                     DocumentPickerView(store: store, showDocumentPicker: $showDocumentPicker, pickerMode: pickerMode)
                 }
-                Text("Exports the currently used CVS with all the chash flows to a chosen folder.")
+                Text("exportCVSExplanation")
                     .font(.caption)
                     .padding(.vertical, 10)
-                Divider()
-                    .padding(.vertical, 10)
-                Button(action: {
+    
+                StyledButton(isSheetOpen: $showDocumentPicker, action: {
                     pickerMode = .importDocument
                     showDocumentPicker = true
-                }) {
-                    Text("Choose new file")
-                }
-                .padding(20)
-                .background(.expense)
-                .cornerRadius(10)
+                }, buttonText: "chooseNewFile")
                 .sheet(isPresented: $showDocumentPicker) {
                     DocumentPickerView(store: store, showDocumentPicker: $showDocumentPicker, pickerMode: pickerMode)
                     
                 }
                 VStack(alignment: .leading) {
-                    Text("Choose a new CSV file to read and write new data.\n")
-                    Text("Make sure that the file has maximum 3 columns filled and use no titles. So just 3 columns with as many rows as you wish. 1st column contains the date in format \"dd.MM.yyy\", 2nd column contains the price in format \"0.00 €\", and 3rd column contains an optional text description.\nRefer to this example CSV:\n")
+                    Text("chooseNewFileInfo1")
+                    Text("chooseNewFileInfo2")
                     Image("CSV-example")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
@@ -67,9 +59,10 @@ struct SettingsView: View {
                     .foregroundColor(.mainText)
                 }
             }
+            .background(.mainBG)
         }
     }
-        
+    
 }
 
 

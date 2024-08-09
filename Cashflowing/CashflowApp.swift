@@ -21,6 +21,9 @@ struct CashflowApp: App {
                         fatalError("Failed to load flows: \(error)")
                     }
                 }
+                .onAppear {
+                    store.locale = store.loadSavedLocale()
+                }
         }
     }
     

@@ -16,34 +16,11 @@ struct AddNewFlow: View {
     var oldFlow: Flow?
     @Binding var isEditSheetOpen: Bool
     @Binding var editedFlow: Flow
+    @State private var isDatePickerOpen: Bool = false
     
     var body: some View {
-        GeometryReader { geometry in
+        ZStack {
             VStack(alignment: .leading) {
-                HStack {
-                    HStack {
-                        Text("Amount")
-                        TextField("0.00", text: $amount)
-                            .onChange(of: amount, validateInput)
-                            .keyboardType(.decimalPad)
-                            .padding(.horizontal, 15)
-                            .padding(.vertical, 5)
-                            .background(.greyBG)
-                            .cornerRadius(7.5)
-                    }
-                    .frame(width: geometry.size.width * 0.57)
-                    Divider()
-                        .frame(maxHeight: 30)
-                    DatePicker("Date", selection: $date, displayedComponents: .date)
-                        .labelsHidden()
-                    
-                    
-                }
-                TextField("Description", text: Binding(get: {description}, set: {description = String($0)}))
-                    .padding(.horizontal, 15)
-                    .padding(.vertical, 10)
-                    .background(.greyBG)
-                    .cornerRadius(7.5)
                 Button(action: {
                     Task {
                         if isEditMode {
@@ -62,6 +39,36 @@ struct AddNewFlow: View {
                 .disabled(amount.isEmpty)
                 .background(getBackgroundColor())
                 .cornerRadius(7.5)
+                .padding(.bottom, 5)
+                HStack {
+                    HStack {
+                        Text("Amount")
+                        TextField("0.00", text: $amount)
+                            .onChange(of: amount, validateInput)
+                            .keyboardType(.decimalPad)
+                            .padding(.horizontal, 15)
+                            .padding(.vertical, 5)
+                            .background(.greyBG)
+                            .cornerRadius(7.5)
+                    }
+                    .frame(width: UIScreen.main.bounds.width * 0.57)
+                    Divider()
+                        .frame(maxHeight: 30)
+                    Button(action: { isDatePickerOpen = true }) {
+                        Text("\(formatDate(date: date))")
+                    }
+                    .padding(.horizontal, 15)
+                    .padding(.vertical, 6)
+                    .background(.greyBG)
+                    .cornerRadius(GlobalValues.cornerRadius)
+                    
+                }
+                TextField("Description", text: Binding(get: {description}, set: {description = String($0)}))
+                    .padding(.horizontal, 15)
+                    .padding(.vertical, 10)
+                    .background(.greyBG)
+                    .cornerRadius(7.5)
+                Spacer()
             }
             .foregroundColor(.mainText)
             .padding()
@@ -79,6 +86,11 @@ struct AddNewFlow: View {
                     description = oldFlow!.description
                 }
             }
+        }
+        .overlay {
+            isDatePickerOpen ? CustomCalendarView(selectedDate: $date, isDatePickerOpen: $isDatePickerOpen)
+                .position(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height * (isEditMode ? 0.2 : 0))
+            : nil
         }
     }
     
@@ -122,7 +134,7 @@ struct AddNewFlow: View {
 
 
 #Preview {
-    AddNewFlow(store: FlowStore(), isEditMode: false, oldFlow: Flow(amount: 10.00, description: "Old flow"), isEditSheetOpen: .constant(false), editedFlow: .constant(Flow(amount: 0.00)))
+    AddNewFlow(store: FlowStore(), isEditMode: true, oldFlow: Flow(amount: 10.00, description: "Old flow"), isEditSheetOpen: .constant(false), editedFlow: .constant(Flow(amount: 0.00)))
         .background(.mainBG)
 }
 
