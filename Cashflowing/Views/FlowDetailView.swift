@@ -33,12 +33,12 @@ struct FlowDetailView: View {
                         }
                         HStack {
                             Image(systemName: "dollarsign.square")
-                            Text("\(usedFlow.amountString)")
+                            Text("\(formatAmountString())")
                         }
                         HStack {
                             if usedFlow.descriptionEmoji.isEmpty { Image(systemName: "info.square")} else {
                                 Text(usedFlow.descriptionEmoji) }
-                            Text("\(usedFlow.description.isEmpty ? "No description" : usedFlow.description)")
+                            if usedFlow.description.isEmpty { Text(LocalizedStringKey("noDescription")) } else { Text("\(usedFlow.description)") }
                         }
                     }
                     .frame(maxWidth: UIScreen.main.bounds.width * 0.8)
@@ -59,7 +59,7 @@ struct FlowDetailView: View {
                             .stroke(.black, lineWidth: 1)
                     }
                     .sheet(isPresented: $isEditSheetOpen) {
-                        EditFlowView(store: store, flow: flow, isEditSheetOpen: $isEditSheetOpen, editedFlow: editedFlow)
+                        EditFlowView(store: store, flow: flow, isEditSheetOpen: $isEditSheetOpen, editedFlow: $editedFlow)
                     }
                 }
             }
@@ -71,8 +71,19 @@ struct FlowDetailView: View {
             usedFlow = editedFlow
         }
     }
+    
+    private func isGermanLocale() -> Bool {
+        return store.locale.identifier.contains("de_DE")
+    }
+    
+    private func formatAmountString() -> String {
+        if isGermanLocale() {
+            return usedFlow.amountStringWithComma
+        }
+        return usedFlow.amountString
+    }
 }
 
 #Preview {
-    FlowDetailView(store: FlowStore(), flow: Flow(amount: 100.00, description: "Long description"))
+    FlowDetailView(store: FlowStore(), flow: Flow(amount: 100.00, description: ""))
 }

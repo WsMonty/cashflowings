@@ -22,6 +22,7 @@ struct AddNewFlow: View {
         ZStack {
             VStack(alignment: .leading) {
                 Button(action: {
+                    amount = amount.replacingOccurrences(of: ",", with: ".")
                     Task {
                         if isEditMode {
                             try await store.editFlow(oldFlow: oldFlow!, newFlow: Flow(amount: Double(amount) ?? 0.00, date: date, description: description))
@@ -36,7 +37,7 @@ struct AddNewFlow: View {
                         .padding(.horizontal, 15)
                         .padding(.vertical, 7.5)
                 }
-                .disabled(amount.isEmpty)
+                .disabled(amount.isEmpty || amount == "-" )
                 .background(getBackgroundColor())
                 .cornerRadius(7.5)
                 .padding(.bottom, 5)
@@ -45,7 +46,7 @@ struct AddNewFlow: View {
                         Text("Amount")
                         TextField("0.00", text: $amount)
                             .onChange(of: amount, validateInput)
-                            .keyboardType(.decimalPad)
+                            .keyboardType(.numbersAndPunctuation)
                             .padding(.horizontal, 15)
                             .padding(.vertical, 5)
                             .background(.greyBG)
@@ -105,8 +106,14 @@ struct AddNewFlow: View {
     }
     
     private func validateInput() {
-        let filtered = amount.filter { "0123456789.-".contains($0) }
+        let filtered = amount.filter { "0123456789.-,".contains($0) }
         var result = filtered
+        if filtered.contains(",") {
+            let splitString = filtered.split(separator: ",")
+            let beforeComma = String(splitString[0])
+            let afterComma = splitString.count > 1 ? String(splitString[1].prefix(2)) : ""
+            result = "\(beforeComma),\(afterComma)"
+        }
         if filtered.contains(".") {
             let splitString = filtered.split(separator: ".")
             let beforeComma = String(splitString[0])
@@ -118,15 +125,17 @@ struct AddNewFlow: View {
     }
     
     private func getBackgroundColor() -> Color {
-        if amount.isEmpty { return .greyBG }
-        return Double(amount) ?? 0.00 >= 0 ? .income : .expense
+        let formattedAmount = amount.replacingOccurrences(of: ",", with: ".")
+        if formattedAmount.isEmpty || formattedAmount == "-"  { return .greyBG }
+        return Double(formattedAmount) ?? 0.00 >= 0 ? .income : .expense
     }
     
     private func getButtonText() -> String {
-        if amount.isEmpty { return "Add" }
+        let formattedAmount = amount.replacingOccurrences(of: ",", with: ".")
+        if formattedAmount.isEmpty || formattedAmount == "-" { return "Add" }
         if isEditMode { return "Confirm" }
-        if (Double(amount) != nil) {
-            return Double(amount)! > 0 ? "Add Income" : "Add Expense"
+        if (Double(formattedAmount) != nil) {
+            return Double(formattedAmount)! > 0 ? "Add Income" : "Add Expense"
         }
         return ""
     }
@@ -134,7 +143,7 @@ struct AddNewFlow: View {
 
 
 #Preview {
-    AddNewFlow(store: FlowStore(), isEditMode: true, oldFlow: Flow(amount: 10.00, description: "Old flow"), isEditSheetOpen: .constant(false), editedFlow: .constant(Flow(amount: 0.00)))
+    AddNewFlow(store: FlowStore(), isEditMode: false, oldFlow: Flow(amount: 10.00, description: "Old flow"), isEditSheetOpen: .constant(false), editedFlow: .constant(Flow(amount: 0.00)))
         .background(.mainBG)
 }
 

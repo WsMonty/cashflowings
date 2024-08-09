@@ -17,9 +17,6 @@
         }
       }
     },
-    "%@ €" : {
-
-    },
     "%lld" : {
 
     },
@@ -133,38 +130,6 @@
         }
       }
     },
-    "Choose a new CSV file to read and write new data.\n" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wähle eine neue Datei aus, um neue Daten zu importieren.\nAchtung: Dabei werden die akutellen Daten gelöscht! Bitte vorher exportieren.\n"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Choose a new CSV file to read and write new data."
-          }
-        }
-      }
-    },
-    "Choose new file" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Neue Datei importieren"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Choose new file"
-          }
-        }
-      }
-    },
     "chooseNewFile" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -187,7 +152,7 @@
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Wähle eine neue Datei aus, um neue Daten zu importieren.\nAchtung: Dabei werden die akutellen Daten gelöscht! Bitte vorher exportieren.\n"
           }
         },
@@ -204,7 +169,7 @@
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Die Datei sollte aus maximal 3 Spalten bestehen, die nur die Daten enthalten in richtiger Reihenfolge: 1. Spalte ist das Datum im Format \"dd.MM.yy\", 2. Spalte enthält den Betrag im Format \"0.00 €\" und die 3. Spalte ist die jeweilige optionale Beschreibung.\nHier ein Beispiel einer gültigen CSV Datei:\n"
           }
         },
@@ -347,6 +312,12 @@
         }
       }
     },
+    "End" : {
+
+    },
+    "Entry" : {
+
+    },
     "expenses" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -364,28 +335,12 @@
         }
       }
     },
-    "Export CVS" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "CSV"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Export CSV"
-          }
-        }
-      }
-    },
     "exportCSV" : {
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "CSV exportieren"
           }
         },
@@ -399,22 +354,6 @@
     },
     "exportCVSExplanation" : {
       "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Exportiert die aktuellen Daten in einer CSV Datei zu dem ausgewählten Ordner."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Exports the currently used CVS with all the chash flows to a chosen folder."
-          }
-        }
-      }
-    },
-    "Exports the currently used CVS with all the chash flows to a chosen folder." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -452,7 +391,7 @@
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Sprache auswählen"
           }
         },
@@ -464,18 +403,36 @@
         }
       }
     },
-    "Make sure that the file has maximum 3 columns filled and use no titles. So just 3 columns with as many rows as you wish. 1st column contains the date in format \"dd.MM.yyy\", 2nd column contains the price in format \"0.00 €\", and 3rd column contains an optional text description.\nRefer to this example CSV:\n" : {
+    "next" : {
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Die Datei sollte aus maximal 3 Spalten bestehen, die nur die Daten enthalten in richtiger Reihenfolge: 1. Spalte ist das Datum im Format \"dd.MM.yy\", 2. Spalte enthält den Betrag im Format \"0.00 €\" und die 3. Spalte ist die jeweilige optionale Beschreibung.\nHier ein Beispiel einer gültigen CSV Datei:\n"
+            "value" : "Weiter"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Make sure that the file has maximum 3 columns filled and use no titles. So just 3 columns with as many rows as you wish. 1st column contains the date in format \"dd.MM.yyy\", 2nd column contains the price in format \"0.00 €\", and 3rd column contains an optional text description.\nRefer to this example CSV:"
+            "value" : "Continue"
+          }
+        }
+      }
+    },
+    "noDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Beschreibung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No description"
           }
         }
       }
@@ -496,6 +453,15 @@
           }
         }
       }
+    },
+    "Settings" : {
+
+    },
+    "Swipe" : {
+
+    },
+    "Test Button" : {
+
     },
     "Total amount" : {
       "localizations" : {
@@ -529,6 +495,9 @@
           }
         }
       }
+    },
+    "Welcome" : {
+
     }
   },
   "version" : "1.0"

@@ -11,7 +11,7 @@ struct EditFlowView: View {
     @ObservedObject var store: FlowStore
     var flow: Flow
     @Binding var isEditSheetOpen: Bool
-    @State var editedFlow: Flow
+    @Binding var editedFlow: Flow
 
     var body: some View {
         NavigationStack {
@@ -38,5 +38,5 @@ struct EditFlowView: View {
 
 
 #Preview {
-    EditFlowView(store: FlowStore(), flow: Flow(amount: 10.00, date: Date(), description: "Test"), isEditSheetOpen: .constant(true), editedFlow: Flow(amount: 0.00))
+    EditFlowView(store: FlowStore(), flow: Flow(amount: 10.00, date: Date(), description: "Test"), isEditSheetOpen: .constant(true), editedFlow: .constant(Flow(amount: 0.00)))
 }

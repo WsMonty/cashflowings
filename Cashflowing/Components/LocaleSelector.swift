@@ -14,7 +14,7 @@ struct LocaleSelector: View {
     
     var body: some View {
         StyledButton(isSheetOpen: $isLocaleModuleOpen, action: { isLocaleModuleOpen = true }, buttonText: "changeLocale")
-        .confirmationDialog("localeDialogTitle", isPresented: $isLocaleModuleOpen) {
+            .confirmationDialog("localeDialogTitle", isPresented: $isLocaleModuleOpen, titleVisibility: .visible) {
             ForEach(availableLocales) {localeOption in
                 Button( action: { store.changeLocale(locale: localeOption.locale)} ) {
                     Text("\(localeOption.displayName)")

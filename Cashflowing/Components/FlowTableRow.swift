@@ -9,6 +9,7 @@ import SwiftUI
 
 struct FlowTableRow: View {
     var flow: Flow
+    var locale: Locale
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -22,16 +23,17 @@ struct FlowTableRow: View {
                 .padding(.leading, 20)
                 HStack {
                     Image(systemName: "dollarsign.square")
-                    Text("\(flow.amountString)")
+                    Text("\(formatAmountString())")
                     Spacer()
                 }
                 .frame(width: UIScreen.main.bounds.width / 3)
-              
+              Spacer()
             }
             if !flow.description.isEmpty {
                 Text("\(flow.descriptionEmoji) \(truncateWithEllipsis(flow.description))")
                     .font(.caption)
                     .padding(.leading, 20)
+                    .frame(width: .infinity)
             }
         }
         .foregroundColor(.black)
@@ -39,7 +41,7 @@ struct FlowTableRow: View {
         .padding(.vertical, 5)
     }
     
-    private func truncateWithEllipsis(_ input: String, limit: Int = 35) -> String {
+    private func truncateWithEllipsis(_ input: String, limit: Int = 40) -> String {
         if input.count > limit {
             let endIndex = input.index(input.startIndex, offsetBy: limit)
             return String(input[..<endIndex]) + "..."
@@ -47,10 +49,21 @@ struct FlowTableRow: View {
             return input
         }
     }
+    
+    private func isGermanLocale() -> Bool {
+        return locale.identifier.contains("de_DE")
+    }
+    
+    private func formatAmountString() -> String {
+        if isGermanLocale() {
+            return flow.amountStringWithComma
+        }
+        return flow.amountString
+    }
 }
 
 #Preview {
-    FlowTableRow(flow: Flow(amount: 100, description: "Concert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert payment"))
+    FlowTableRow(flow: Flow(amount: 100, description: "Concert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert payment"), locale: availableLocales[1].locale)
         .background(.income)
         .previewLayout(.fixed(width: 400, height: 60))
 }

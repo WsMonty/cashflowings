@@ -45,7 +45,7 @@ class FlowStore: ObservableObject {
                 let separatedValues = string.split(separator: ",")
                 let dateFormatter = DateFormatter()
                 dateFormatter.dateFormat = "dd.MM.yyyy"
-                let amountCharacterSet = "0123456789."
+                let amountCharacterSet = "0123456789.-"
                 let currencyCharacterSet =  "€$£"
                 
                 if let dateString = separatedValues.first,

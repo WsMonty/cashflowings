@@ -10,9 +10,15 @@ import SwiftUI
 
 struct SettingsView: View {
     @ObservedObject var store: FlowStore
-    @State private var showDocumentPicker = false
+    @State private var showDocumentPicker: Bool = false
     @State private var pickerMode: PickerMode = .exportDocument
     @Binding var isSettingsOpen: Bool
+    
+    init(store: FlowStore, isSettingsOpen: Binding<Bool>) {
+        self.store = store
+        self._isSettingsOpen = isSettingsOpen
+        UIBarButtonItem.appearance().tintColor = .black
+    }
     
     var body: some View {
         NavigationStack {
@@ -26,6 +32,7 @@ struct SettingsView: View {
                 }, buttonText: "exportCSV")
                 .sheet(isPresented: $showDocumentPicker) {
                     DocumentPickerView(store: store, showDocumentPicker: $showDocumentPicker, pickerMode: pickerMode)
+                        .foregroundStyle(.black)
                 }
                 Text("exportCVSExplanation")
                     .font(.caption)
@@ -37,6 +44,7 @@ struct SettingsView: View {
                 }, buttonText: "chooseNewFile")
                 .sheet(isPresented: $showDocumentPicker) {
                     DocumentPickerView(store: store, showDocumentPicker: $showDocumentPicker, pickerMode: pickerMode)
+                        .foregroundStyle(.black)
                     
                 }
                 VStack(alignment: .leading) {

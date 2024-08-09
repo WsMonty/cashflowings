@@ -20,7 +20,7 @@ struct HomeView: View {
             NavigationStack {
                 GeometryReader { geometry in
                     VStack(spacing: 0) {
-                        TotalAmount(flows: $store.flows)
+                        TotalAmount(store: store)
                             .frame(width: geometry.size.width, height: geometry.size.height * 0.1)
                         FlowsTableView(store: store)
                             .frame(width: geometry.size.width, height: geometry.size.height * 0.65)
@@ -39,7 +39,6 @@ struct HomeView: View {
                 }
                 .sheet(isPresented: $isSettingsOpen) {
                     SettingsView(store: store, isSettingsOpen: $isSettingsOpen)
-                        
                 }
             }
             .environment(\.locale, store.locale)

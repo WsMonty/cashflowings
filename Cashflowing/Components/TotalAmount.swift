@@ -8,28 +8,33 @@
 import SwiftUI
 
 struct TotalAmount: View {
-    @Binding var flows: [Flow]
-    
-    private func getTotalAmount() -> Double {
-        let amounts = flows.map { $0.amount }
-        
-        return amounts.reduce(0, { x, y in
-                x + y
-        })
-    }
+    @ObservedObject var store: FlowStore
     
     var body: some View {
         VStack {
-            Text("\(String(format: "%.2f", getTotalAmount())) €")
+            Text("\(getTotalAmount()) \(store.flows.first?.currency ?? "€")")
                 .font(.title)
             Text("Total amount")
                 .font(.caption)
         }
         .foregroundColor(.mainText)
     }
+    
+    private func getTotalAmount() -> String {
+        let amounts = store.flows.map { $0.amount }
+        let sum = amounts.reduce(0, { x, y in
+            x + y
+        })
+        
+        return isGermanLocale() ? String(format: "%.2f", sum).replacingOccurrences(of: ".", with: ",") : String(format: "%.2f", sum)
+    }
+    
+    private func isGermanLocale() -> Bool {
+        return store.locale.identifier.contains("de_DE")
+    }
 }
 
 #Preview {
-    TotalAmount(flows: .constant(Flow.sampleData))
+    TotalAmount(store: FlowStore())
         .background(.mainBG)
 }

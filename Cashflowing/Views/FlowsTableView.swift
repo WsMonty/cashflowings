@@ -40,7 +40,7 @@ struct FlowsTableView: View {
                     }
                 }, id: \.id) { flow in
                     NavigationLink(destination: FlowDetailView(store: store, flow: flow)) {
-                        FlowTableRow(flow: flow)
+                        FlowTableRow(flow: flow, locale: store.locale)
                             .listRowSeparator(.hidden)
                     }
                     .listRowBackground(getTextColor(type: flow.type))
