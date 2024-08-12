@@ -13,9 +13,7 @@ struct TutorialEnd: View {
     var body: some View {
         VStack {
             Text("End")
-            Button(action: action) {
-                Text("next")
-            }
+            NextButton(action: action, isEnding: true)
         }
     }
 }

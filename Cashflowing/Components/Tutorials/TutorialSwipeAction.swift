@@ -13,9 +13,7 @@ struct TutorialSwipeAction: View {
     var body: some View {
         VStack {
             Text("Swipe")
-            Button(action: action) {
-                Text("next")
-            }
+            NextButton(action: action)
         }
     }
 }

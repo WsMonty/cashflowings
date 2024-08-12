@@ -13,6 +13,7 @@
 		6B7E1AC42C6627E200698179 /* TutorialSwipeAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B7E1AC32C6627E200698179 /* TutorialSwipeAction.swift */; };
 		6B7E1AC62C6627F000698179 /* TutorialSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B7E1AC52C6627F000698179 /* TutorialSettings.swift */; };
 		6B7E1AC82C6627FF00698179 /* TutorialEnd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B7E1AC72C6627FF00698179 /* TutorialEnd.swift */; };
+		6B7E1ACA2C66407200698179 /* NextButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B7E1AC92C66407200698179 /* NextButton.swift */; };
 		6BCEABB72C6111C800AD6F9E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6BCEABB62C6111C800AD6F9E /* Assets.xcassets */; };
 		6BCEABCA2C6111E700AD6F9E /* FlowDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BCEABB92C6111E700AD6F9E /* FlowDetailView.swift */; };
 		6BCEABCB2C6111E700AD6F9E /* FlowsTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BCEABBA2C6111E700AD6F9E /* FlowsTableView.swift */; };
@@ -44,6 +45,7 @@
 		6B7E1AC32C6627E200698179 /* TutorialSwipeAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialSwipeAction.swift; sourceTree = "<group>"; };
 		6B7E1AC52C6627F000698179 /* TutorialSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialSettings.swift; sourceTree = "<group>"; };
 		6B7E1AC72C6627FF00698179 /* TutorialEnd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialEnd.swift; sourceTree = "<group>"; };
+		6B7E1AC92C66407200698179 /* NextButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextButton.swift; sourceTree = "<group>"; };
 		6BCEABB62C6111C800AD6F9E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6BCEABB92C6111E700AD6F9E /* FlowDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlowDetailView.swift; sourceTree = "<group>"; };
 		6BCEABBA2C6111E700AD6F9E /* FlowsTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlowsTableView.swift; sourceTree = "<group>"; };
@@ -121,6 +123,7 @@
 				6B7E1AC32C6627E200698179 /* TutorialSwipeAction.swift */,
 				6B7E1AC52C6627F000698179 /* TutorialSettings.swift */,
 				6B7E1AC72C6627FF00698179 /* TutorialEnd.swift */,
+				6B7E1AC92C66407200698179 /* NextButton.swift */,
 			);
 			path = Tutorials;
 			sourceTree = "<group>";
@@ -276,6 +279,7 @@
 				6BCEABCA2C6111E700AD6F9E /* FlowDetailView.swift in Sources */,
 				6BCEABD92C621DD800AD6F9E /* FlowTableRow.swift in Sources */,
 				6BCEABCF2C6111E700AD6F9E /* CashflowApp.swift in Sources */,
+				6B7E1ACA2C66407200698179 /* NextButton.swift in Sources */,
 				6BCEABD32C6111E700AD6F9E /* AddNewFlow.swift in Sources */,
 				6B7E1AC22C6627D200698179 /* TutorialFlowEntry.swift in Sources */,
 				6BCEABD02C6111E700AD6F9E /* DocumentPicker.swift in Sources */,
@@ -428,13 +432,13 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.25;
+				MARKETING_VERSION = 1.30;
 				PRODUCT_BUNDLE_IDENTIFIER = com.gg.Cashflowing;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -463,13 +467,13 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.25;
+				MARKETING_VERSION = 1.30;
 				PRODUCT_BUNDLE_IDENTIFIER = com.gg.Cashflowing;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

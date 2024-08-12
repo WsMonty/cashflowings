@@ -13,9 +13,7 @@ struct TutorialFlowEntry: View {
     var body: some View {
         VStack {
             Text("Entry")
-            Button(action: action) {
-                Text("next")
-            }
+            NextButton(action: action)
         }
     }
 }

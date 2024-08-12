@@ -34,6 +34,7 @@ struct TutorialView: View {
             })
             }
         }
+        .foregroundStyle(.mainText)
     }
 }
 

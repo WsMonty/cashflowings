@@ -33,7 +33,6 @@ struct FlowTableRow: View {
                 Text("\(flow.descriptionEmoji) \(truncateWithEllipsis(flow.description))")
                     .font(.caption)
                     .padding(.leading, 20)
-                    .frame(width: .infinity)
             }
         }
         .foregroundColor(.black)

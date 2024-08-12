@@ -12,11 +12,16 @@ struct TutorialWelcome: View {
     
     var body: some View {
         VStack {
-            Text("Welcome")
-            Button(action: action) {
-                Text("next")
+            HStack {
+                Text("welcomeText")
+                Spacer()
             }
+           NextButton(action: action)
+            Spacer()
         }
+        .padding()
+        .foregroundStyle(.mainText)
+        .background(.mainBG)
     }
 }
 

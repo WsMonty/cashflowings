@@ -47,6 +47,15 @@
         }
       }
     },
+    "Add" : {
+
+    },
+    "Add Expense" : {
+
+    },
+    "Add Income" : {
+
+    },
     "allFlows" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -181,6 +190,26 @@
         }
       }
     },
+    "clear" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leeren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear"
+          }
+        }
+      }
+    },
+    "Confirm" : {
+
+    },
     "Copy" : {
       "localizations" : {
         "de" : {
@@ -313,10 +342,24 @@
       }
     },
     "End" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ende"
+          }
+        }
+      }
     },
     "Entry" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eingabe"
+          }
+        }
+      }
     },
     "expenses" : {
       "extractionState" : "manual",
@@ -420,6 +463,9 @@
         }
       }
     },
+    "Next" : {
+
+    },
     "noDescription" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -455,13 +501,37 @@
       }
     },
     "Settings" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einstellungen"
+          }
+        }
+      }
+    },
+    "Start" : {
 
     },
     "Swipe" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wischen"
+          }
+        }
+      }
     },
     "Test Button" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Test Button"
+          }
+        }
+      }
     },
     "Total amount" : {
       "localizations" : {
@@ -497,7 +567,32 @@
       }
     },
     "Welcome" : {
-
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Willkommen"
+          }
+        }
+      }
+    },
+    "welcomeText" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Willkommen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Welcome"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

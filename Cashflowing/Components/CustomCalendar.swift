@@ -15,6 +15,8 @@ struct CustomCalendarView: View {
     let dateFormatter: DateFormatter
     let monthFormatter: DateFormatter
     
+    var isIpad: Bool = UIDevice.current.userInterfaceIdiom == .pad
+    
     init(selectedDate: Binding<Date>, isDatePickerOpen: Binding<Bool>) {
         self._selectedDate = selectedDate
         self.dateFormatter = DateFormatter()
@@ -89,7 +91,7 @@ struct CustomCalendarView: View {
         .zIndex(3)
         .font(.system(size: 13))
         .padding()
-        .frame(width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.height * 0.4)
+        .frame(width: UIScreen.main.bounds.width * (isIpad ? 0.5 : 0.8), height: UIScreen.main.bounds.height * (isIpad ? 0.3 : 0.4))
         .background(.lighterBG)
         .cornerRadius(GlobalValues.cornerRadius)
     }

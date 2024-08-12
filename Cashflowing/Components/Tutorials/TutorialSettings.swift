@@ -13,9 +13,7 @@ struct TutorialSettings: View {
     var body: some View {
         VStack {
             Text("Settings")
-            Button(action: action) {
-                Text("next")
-            }
+            NextButton(action: action)
         }
     }
 }
