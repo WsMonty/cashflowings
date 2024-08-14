@@ -23,6 +23,8 @@ class FlowStore: ObservableObject {
     @Published var dataType: DataType = .allFlows
     @Published var locale: Locale = .current
     
+    @Published var unfilteredFlows: [Flow] = []
+    
     private static func getFileURL() throws -> URL {
         let fileManager = FileManager.default
         let documentsURL = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
@@ -60,6 +62,8 @@ class FlowStore: ObservableObject {
             }
             
             self.flows = loadedFlows.sorted(by: { $0.date < $1.date })
+            self.unfilteredFlows = loadedFlows.sorted(by: { $0.date < $1.date })
+            print("\(unfilteredFlows)")
         } catch {
             print("Error loading or creating file: \(error)")
             throw error
@@ -107,6 +111,28 @@ class FlowStore: ObservableObject {
         } catch {
             print("Error replacing content of csv file. Reason: \(error)")
         }
+    }
+    
+    func filterFlows(filter: String) {
+        print("\(unfilteredFlows)")
+        if filter.isEmpty {
+            flows = unfilteredFlows
+            return
+        }
+        let filteredFlows = unfilteredFlows.filter { $0.description.lowercased().contains(filter) || $0.amountString.contains(filter) || $0.dateString.contains(filter) }
+        
+        flows = filteredFlows
+    }
+    
+    func filterFlowsByDate(filter: Date) {
+        let formattedDate = formatDate(date: filter)
+        let filteredFlows = unfilteredFlows.filter { $0.dateString == formattedDate }
+        
+        flows = filteredFlows
+    }
+    
+    func removeAllFilters() {
+        flows = unfilteredFlows
     }
     
     private func replaceCSVContent() throws {

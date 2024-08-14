@@ -45,7 +45,7 @@ struct AddNewFlow: View {
                             .padding(.horizontal, 15)
                             .padding(.vertical, 5)
                             .background(.greyBG)
-                            .cornerRadius(7.5)
+                            .cornerRadius(GlobalValues.cornerRadius)
                     }
                     .frame(width: UIScreen.main.bounds.width * (isIpad && isEditMode ? 0.45 : 0.57))
                     Divider()
@@ -88,7 +88,7 @@ struct AddNewFlow: View {
             }
         }
         .overlay {
-            isDatePickerOpen ? CustomCalendarView(selectedDate: $date, isDatePickerOpen: $isDatePickerOpen)
+            isDatePickerOpen ? CustomCalendarView(selected: $date, isDatePickerOpen: $isDatePickerOpen)
                 .position(x: UIScreen.main.bounds.width / 2 - (isIpad && isEditMode ? 50 : 0), y: UIScreen.main.bounds.height * (isEditMode ? 0.3 : 0))
             : nil
         }

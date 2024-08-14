@@ -8,8 +8,10 @@
 import SwiftUI
 
 struct CustomCalendarView: View {
-    @Binding var selectedDate: Date
+    @Binding var selected: Date
     @Binding var isDatePickerOpen: Bool
+    
+    @State var selectedDate: Date = Date()
     
     let calendar = Calendar.current
     let dateFormatter: DateFormatter
@@ -17,8 +19,8 @@ struct CustomCalendarView: View {
     
     var isIpad: Bool = UIDevice.current.userInterfaceIdiom == .pad
     
-    init(selectedDate: Binding<Date>, isDatePickerOpen: Binding<Bool>) {
-        self._selectedDate = selectedDate
+    init(selected: Binding<Date>, isDatePickerOpen: Binding<Bool>) {
+        self._selected = selected
         self.dateFormatter = DateFormatter()
         self.dateFormatter.dateFormat = "d"
         
@@ -63,9 +65,9 @@ struct CustomCalendarView: View {
                     Text(day > 0 ? "\(day)" : "")
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .padding(8)
-                        .background(day == calendar.component(.day, from: selectedDate) ? Color.blue : Color.clear)
+                        .background(day == calendar.component(.day, from: selectedDate) ? .income : Color.clear)
                         .cornerRadius(8)
-                        .foregroundColor(day > 0 ? .white : .clear)
+                        .foregroundColor(day > 0 ? (day == calendar.component(.day, from: selectedDate) ? .black : .white) : .clear)
                         .onTapGesture {
                             if day > 0 {
                                 selectDay(day)
@@ -73,25 +75,37 @@ struct CustomCalendarView: View {
                         }
                 }
             }
-            Button(action: {
-                withAnimation {
-                    isDatePickerOpen = false
+            Spacer()
+            HStack {
+                Button(action: {
+                    selected = selectedDate
+                    withAnimation {
+                        isDatePickerOpen = false
+                    }
+                }) {
+                    Text("Done")
+                        .padding(.horizontal, 15)
+                        .padding(.vertical, 10)
+                        .background(.income)
+                        .foregroundColor(.mainBG)
+                        .cornerRadius(GlobalValues.cornerRadius)
                 }
-            }) {
-                Text("Done")
-                    .padding(.horizontal, 15)
-                    .padding(.vertical, 10)
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(GlobalValues.cornerRadius)
+                .padding(.vertical, 10)
+                Button(action: { isDatePickerOpen = false }) {
+                    Text("dismiss")
+                        .padding(.horizontal, 15)
+                        .padding(.vertical, 10)
+                        .background(.expense)
+                        .foregroundColor(.mainBG)
+                        .cornerRadius(GlobalValues.cornerRadius)
+                }
             }
-            .padding(.vertical, 10)
         }
         .transition(.opacity)
         .zIndex(3)
         .font(.system(size: 13))
         .padding()
-        .frame(width: UIScreen.main.bounds.width * (isIpad ? 0.5 : 0.8), height: UIScreen.main.bounds.height * (isIpad ? 0.3 : 0.4))
+        .frame(width: UIScreen.main.bounds.width * (isIpad ? 0.5 : 0.8), height: UIScreen.main.bounds.height * (isIpad ? 0.35 : 0.48))
         .background(.lighterBG)
         .cornerRadius(GlobalValues.cornerRadius)
     }
@@ -124,5 +138,5 @@ struct CustomCalendarView: View {
 }
 
 #Preview {
-    CustomCalendarView(selectedDate: .constant(Date()), isDatePickerOpen: .constant(true))
+    CustomCalendarView(selected: .constant(Date("21.06.2024")), isDatePickerOpen: .constant(true))
 }
