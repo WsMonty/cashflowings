@@ -46,6 +46,7 @@
 		6B7E1AC52C6627F000698179 /* TutorialSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialSettings.swift; sourceTree = "<group>"; };
 		6B7E1AC72C6627FF00698179 /* TutorialEnd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialEnd.swift; sourceTree = "<group>"; };
 		6B7E1AC92C66407200698179 /* NextButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextButton.swift; sourceTree = "<group>"; };
+		6BAB881B2C6CB5040062B27B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		6BCEABB62C6111C800AD6F9E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6BCEABB92C6111E700AD6F9E /* FlowDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlowDetailView.swift; sourceTree = "<group>"; };
 		6BCEABBA2C6111E700AD6F9E /* FlowsTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlowsTableView.swift; sourceTree = "<group>"; };
@@ -101,6 +102,7 @@
 		6B43E6A82C6111800022ADA6 /* Cashflowing */ = {
 			isa = PBXGroup;
 			children = (
+				6BAB881B2C6CB5040062B27B /* Info.plist */,
 				6BCEABE72C64D7AE00AD6F9E /* Localization */,
 				6BCEABDE2C64BB4500AD6F9E /* Common */,
 				6BCEABB62C6111C800AD6F9E /* Assets.xcassets */,
@@ -426,6 +428,7 @@
 				DEVELOPMENT_TEAM = 444Z59H93A;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Cashflowing/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Cashflowing;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -438,7 +441,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.30;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.gg.Cashflowing;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -461,6 +464,7 @@
 				DEVELOPMENT_TEAM = 444Z59H93A;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Cashflowing/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Cashflowing;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -473,7 +477,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.30;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.gg.Cashflowing;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
