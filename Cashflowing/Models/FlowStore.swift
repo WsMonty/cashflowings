@@ -20,7 +20,7 @@ private var initalFilter: (Flow) -> Bool = { $0.amountString != "false" }
 
 @MainActor
 class FlowStore: ObservableObject {
-    @Published var flows: [Flow] = Flow.sampleData
+    @Published var flows: [Flow] = []
     @Published var copiedData: Flow = Flow(amount: 0)
     @Published var dataType: DataType = .allFlows
     @Published var locale: Locale = .current

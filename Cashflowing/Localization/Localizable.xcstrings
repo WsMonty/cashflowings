@@ -543,6 +543,9 @@
         }
       }
     },
+    "initial" : {
+
+    },
     "January" : {
       "extractionState" : "manual",
       "localizations" : {

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct HomeView: View {
     @ObservedObject var store: FlowStore
-    @State var flows: [Flow]
+    @State var flows: [Flow] = []
     @State var isSettingsOpen: Bool = false
     @State var isSearchOpen: Bool = false
     @State var isDatePickerOpen: Bool = false
@@ -18,7 +18,6 @@ struct HomeView: View {
     
     init(store: FlowStore) {
         self.store = store
-        self.flows = store.flows
         UIBarButtonItem.appearance().tintColor = .mainText
     }
     
@@ -100,6 +99,9 @@ struct HomeView: View {
         .onChange(of: filteredDate) {
             store.filterFlowsByDate(filter: filteredDate)
             isDateFilterActive = true
+        }
+        .onChange(of: store.flows) {
+            flows = store.flows
         }
     }
     
