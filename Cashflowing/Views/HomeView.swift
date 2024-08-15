@@ -9,6 +9,7 @@ import SwiftUI
 
 struct HomeView: View {
     @ObservedObject var store: FlowStore
+    @State var flows: [Flow]
     @State var isSettingsOpen: Bool = false
     @State var isSearchOpen: Bool = false
     @State var isDatePickerOpen: Bool = false
@@ -17,39 +18,71 @@ struct HomeView: View {
     
     init(store: FlowStore) {
         self.store = store
+        self.flows = store.flows
         UIBarButtonItem.appearance().tintColor = .mainText
     }
     
     var body: some View {
         NavigationStack {
             GeometryReader { geometry in
-                VStack(spacing: 0) {
-                    TotalAmount(store: store)
-                        .frame(width: geometry.size.width, height: geometry.size.height * 0.1)
-                    FlowsTableView(store: store)
-                        .frame(width: geometry.size.width, height: geometry.size.height * 0.65)
-                    Divider()
-                    AddNewFlow(store: store, isEditMode: false, isEditSheetOpen: .constant(false), editedFlow: .constant(Flow(amount: 0.00)))
-                        .frame(width: geometry.size.width, height: geometry.size.height * 0.25)
-                }
-                .background(.mainBG)
-                .frame(width: geometry.size.width, height: geometry.size.height)
-                .toolbar {
-                    HStack {
-                        Button(action: { isSearchOpen = !isSearchOpen }) {
-                            Image(systemName: "magnifyingglass")
+                ZStack {
+                    Color.mainBG
+                        .ignoresSafeArea()
+                        .onTapGesture {
+                            dismissKeyboard()
                         }
-                        
-                        if isSearchOpen { Searchbar(isDatePickerOpen: $isDatePickerOpen, store: store, isDateFilterActive: $isDateFilterActive) }
-                        Spacer()
-                        Button(action: { isSettingsOpen = true }) {
-                            Image(systemName: "gear")
-                        }
-                        .foregroundColor(.mainText)
+                    VStack(spacing: 0) {
+                        TotalAmount(flows: flows.filter {
+                            switch store.dataType {
+                            case .allFlows:
+                                $0.amount.isNormal
+                            case .income:
+                                $0.amount > 0
+                            case .expenses:
+                                $0.amount < 0
+                            }
+                        }.filter { flow in
+                            [store.stringFilter, store.dateFilter, store.monthFilter, store.yearFilter].allSatisfy { filter in
+                                    filter(flow)
+                            }
+                        }, locale: store.locale)
+                            .frame(width: geometry.size.width, height: geometry.size.height * 0.1)
+                        FlowsTableView(store: store, flows: flows.filter {
+                            switch store.dataType {
+                            case .allFlows:
+                                $0.amount.isNormal
+                            case .income:
+                                $0.amount > 0
+                            case .expenses:
+                                $0.amount < 0
+                            }
+                        }.filter { flow in
+                            [store.stringFilter, store.dateFilter, store.monthFilter, store.yearFilter].allSatisfy { filter in
+                                    filter(flow)
+                            }
+                        })
+                            .frame(width: geometry.size.width, height: geometry.size.height * 0.65)
+                        Divider()
+                        AddNewFlow(store: store, isEditMode: false, isEditSheetOpen: .constant(false), editedFlow: .constant(Flow(amount: 0.00)))
+                            .frame(width: geometry.size.width, height: geometry.size.height * 0.25)
                     }
-                    .frame(width: UIScreen.main.bounds.width - 20)
+                    .frame(width: geometry.size.width, height: geometry.size.height)
+                    .toolbar {
+                        HStack {
+                            Button(action: { isSearchOpen = !isSearchOpen }) {
+                                Image(systemName: "magnifyingglass")
+                            }
+                            
+                            if isSearchOpen { Searchbar(isDatePickerOpen: $isDatePickerOpen, store: store, isDateFilterActive: $isDateFilterActive) }
+                            Spacer()
+                            Button(action: { isSettingsOpen = true }) {
+                                Image(systemName: "gear")
+                            }
+                            .foregroundColor(.mainText)
+                        }
+                        .frame(width: UIScreen.main.bounds.width - 20)
+                    }
                 }
-                
             }
             .sheet(isPresented: $isSettingsOpen) {
                 SettingsView(store: store, isSettingsOpen: $isSettingsOpen)
@@ -68,6 +101,10 @@ struct HomeView: View {
             store.filterFlowsByDate(filter: filteredDate)
             isDateFilterActive = true
         }
+    }
+    
+    private func dismissKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }
 

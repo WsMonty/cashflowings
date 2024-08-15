@@ -15,6 +15,7 @@
 		6B7E1AC82C6627FF00698179 /* TutorialEnd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B7E1AC72C6627FF00698179 /* TutorialEnd.swift */; };
 		6B7E1ACA2C66407200698179 /* NextButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B7E1AC92C66407200698179 /* NextButton.swift */; };
 		6BAB881D2C6CDA0C0062B27B /* Searchbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BAB881C2C6CDA0C0062B27B /* Searchbar.swift */; };
+		6BAB88232C6E055C0062B27B /* MonthYearFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BAB88222C6E055C0062B27B /* MonthYearFilter.swift */; };
 		6BCEABB72C6111C800AD6F9E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6BCEABB62C6111C800AD6F9E /* Assets.xcassets */; };
 		6BCEABCA2C6111E700AD6F9E /* FlowDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BCEABB92C6111E700AD6F9E /* FlowDetailView.swift */; };
 		6BCEABCB2C6111E700AD6F9E /* FlowsTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BCEABBA2C6111E700AD6F9E /* FlowsTableView.swift */; };
@@ -49,6 +50,7 @@
 		6B7E1AC92C66407200698179 /* NextButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextButton.swift; sourceTree = "<group>"; };
 		6BAB881B2C6CB5040062B27B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		6BAB881C2C6CDA0C0062B27B /* Searchbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Searchbar.swift; sourceTree = "<group>"; };
+		6BAB88222C6E055C0062B27B /* MonthYearFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthYearFilter.swift; sourceTree = "<group>"; };
 		6BCEABB62C6111C800AD6F9E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6BCEABB92C6111E700AD6F9E /* FlowDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlowDetailView.swift; sourceTree = "<group>"; };
 		6BCEABBA2C6111E700AD6F9E /* FlowsTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlowsTableView.swift; sourceTree = "<group>"; };
@@ -173,6 +175,7 @@
 				6BCEABE12C64C98000AD6F9E /* CustomCalendar.swift */,
 				6BCEABEC2C6506F800AD6F9E /* LocaleSelector.swift */,
 				6BAB881C2C6CDA0C0062B27B /* Searchbar.swift */,
+				6BAB88222C6E055C0062B27B /* MonthYearFilter.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -277,6 +280,7 @@
 				6BCEABCD2C6111E700AD6F9E /* SettingsView.swift in Sources */,
 				6B7E1AC02C6627BB00698179 /* TutorialWelcome.swift in Sources */,
 				6B7E1AC82C6627FF00698179 /* TutorialEnd.swift in Sources */,
+				6BAB88232C6E055C0062B27B /* MonthYearFilter.swift in Sources */,
 				6BCEABED2C6506F800AD6F9E /* LocaleSelector.swift in Sources */,
 				6B7E1ABD2C66262500698179 /* TutorialView.swift in Sources */,
 				6BCEABE22C64C98000AD6F9E /* CustomCalendar.swift in Sources */,
@@ -445,7 +449,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0;
+				MARKETING_VERSION = 2.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.gg.Cashflowing;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -481,7 +485,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0;
+				MARKETING_VERSION = 2.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.gg.Cashflowing;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

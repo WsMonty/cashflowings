@@ -8,20 +8,22 @@
 import SwiftUI
 
 struct TotalAmount: View {
-    @ObservedObject var store: FlowStore
+    var flows: [Flow]
+    var locale: Locale
     
     var body: some View {
         VStack {
-            Text("\(getTotalAmount()) \(store.flows.first?.currency ?? "€")")
+            Text("\(getTotalAmount()) \(flows.first?.currency ?? "€")")
                 .font(.title)
             Text("Total amount")
                 .font(.caption)
         }
+        .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height * 0.1)
         .foregroundColor(.mainText)
     }
     
     private func getTotalAmount() -> String {
-        let amounts = store.flows.map { $0.amount }
+        let amounts = flows.map { $0.amount }
         let sum = amounts.reduce(0, { x, y in
             x + y
         })
@@ -30,11 +32,12 @@ struct TotalAmount: View {
     }
     
     private func isGermanLocale() -> Bool {
-        return store.locale.identifier.contains("de_DE")
+        return locale.identifier.contains("de_DE")
     }
+    
 }
 
 #Preview {
-    TotalAmount(store: FlowStore())
+    TotalAmount(flows: Flow.sampleData, locale:availableLocales[0].locale)
         .background(.mainBG)
 }

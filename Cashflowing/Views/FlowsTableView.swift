@@ -10,35 +10,31 @@ import SwiftUI
 struct FlowsTableView: View {
     @ObservedObject var store: FlowStore
     
+    var flows: [Flow]
+    
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                HStack(spacing: 0) {
-                    Button(action: { store.dataType = .allFlows }) {
-                        Text("allFlows")
+                VStack {
+                    MonthYearFilter(store: store)
+                    HStack(spacing: 0) {
+                        Button(action: { store.dataType = .allFlows }) {
+                            Text("allFlows")
+                        }
+                        .customButtonStyle(isActive: store.dataType == .allFlows)
+                        Button(action: { store.dataType = .income }) {
+                            Text("income")
+                        }
+                        .customButtonStyle(isActive: store.dataType == .income)
+                        Button(action: { store.dataType = .expenses }) {
+                            Text("expenses")
+                        }
+                        .customButtonStyle(isActive: store.dataType == .expenses)
                     }
-                    .customButtonStyle(isActive: store.dataType == .allFlows)
-                    Button(action: { store.dataType = .income }) {
-                        Text("income")
-                    }
-                    .customButtonStyle(isActive: store.dataType == .income)
-                    Button(action: { store.dataType = .expenses }) {
-                        Text("expenses")
-                    }
-                    .customButtonStyle(isActive: store.dataType == .expenses)
+                    .padding(.horizontal, 10)
                 }
-                .padding(.horizontal, 10)
                 
-                List(store.flows.filter {
-                    switch store.dataType {
-                    case .allFlows:
-                        $0.amount.isNormal
-                    case .income:
-                        $0.amount > 0
-                    case .expenses:
-                        $0.amount < 0
-                    }
-                }, id: \.id) { flow in
+                List(flows, id: \.id) { flow in
                     NavigationLink(destination: FlowDetailView(store: store, flow: flow)) {
                         FlowTableRow(flow: flow, locale: store.locale)
                             .listRowSeparator(.hidden)
@@ -70,7 +66,7 @@ struct FlowsTableView: View {
 }
 
 #Preview {
-    FlowsTableView(store: FlowStore())
+    FlowsTableView(store: FlowStore(), flows: Flow.sampleData)
 }
 
 struct CustomButtonStyle: ViewModifier {
@@ -98,3 +94,4 @@ extension View {
         self.modifier(CustomButtonStyle(isActive: isActive))
     }
 }
+

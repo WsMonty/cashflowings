@@ -7,8 +7,7 @@
 
 import Foundation
 
-class GlobalValues {
-    
+class GlobalValues {  
     static let cornerRadius: CGFloat = 5
     static let defaultCurrency: String = "€"
 }

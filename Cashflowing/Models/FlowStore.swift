@@ -16,6 +16,8 @@ enum DataType {
     case expenses
 }
 
+private var initalFilter: (Flow) -> Bool = { $0.amountString != "false" }
+
 @MainActor
 class FlowStore: ObservableObject {
     @Published var flows: [Flow] = Flow.sampleData
@@ -23,7 +25,10 @@ class FlowStore: ObservableObject {
     @Published var dataType: DataType = .allFlows
     @Published var locale: Locale = .current
     
-    @Published var unfilteredFlows: [Flow] = []
+    @Published var stringFilter: (Flow) -> Bool = initalFilter
+    @Published var dateFilter: (Flow) -> Bool = initalFilter
+    @Published var monthFilter: (Flow) -> Bool = initalFilter
+    @Published var yearFilter: (Flow) -> Bool = initalFilter
     
     private static func getFileURL() throws -> URL {
         let fileManager = FileManager.default
@@ -62,8 +67,6 @@ class FlowStore: ObservableObject {
             }
             
             self.flows = loadedFlows.sorted(by: { $0.date < $1.date })
-            self.unfilteredFlows = loadedFlows.sorted(by: { $0.date < $1.date })
-            print("\(unfilteredFlows)")
         } catch {
             print("Error loading or creating file: \(error)")
             throw error
@@ -114,25 +117,40 @@ class FlowStore: ObservableObject {
     }
     
     func filterFlows(filter: String) {
-        print("\(unfilteredFlows)")
         if filter.isEmpty {
-            flows = unfilteredFlows
+            stringFilter = initalFilter
             return
         }
-        let filteredFlows = unfilteredFlows.filter { $0.description.lowercased().contains(filter) || $0.amountString.contains(filter) || $0.dateString.contains(filter) }
         
-        flows = filteredFlows
+        stringFilter = { $0.description.lowercased().contains(filter) || $0.amountString.contains(filter) || $0.dateString.contains(filter) }
     }
     
     func filterFlowsByDate(filter: Date) {
         let formattedDate = formatDate(date: filter)
-        let filteredFlows = unfilteredFlows.filter { $0.dateString == formattedDate }
         
-        flows = filteredFlows
+        dateFilter = { $0.dateString == formattedDate }
+    }
+    
+    func filterFlowsByMonth(month: Int) {
+        if month == -1 { return }
+        if month == 0 {
+            monthFilter = initalFilter
+            return
+        }
+        monthFilter = { Calendar.current.component(.month, from: $0.date) == month }
+    }
+    
+    func filterFlowsByYear(year: Int) {
+        if (year == 0) { return }
+        yearFilter = { Calendar.current.component(.year, from: $0.date) == year }
     }
     
     func removeAllFilters() {
-        flows = unfilteredFlows
+        stringFilter = initalFilter
+        dateFilter = initalFilter
+        monthFilter = initalFilter
+        yearFilter = initalFilter
+       // flows = unfilteredFlows
     }
     
     private func replaceCSVContent() throws {

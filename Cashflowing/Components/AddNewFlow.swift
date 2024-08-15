@@ -92,6 +92,9 @@ struct AddNewFlow: View {
                 .position(x: UIScreen.main.bounds.width / 2 - (isIpad && isEditMode ? 50 : 0), y: UIScreen.main.bounds.height * (isEditMode ? 0.3 : 0))
             : nil
         }
+        .onTapGesture {
+            dismissKeyboard()
+        }
     }
     
     private func addNewFlow() {
@@ -181,6 +184,10 @@ struct AddNewFlow: View {
             return Double(formattedAmount)! > 0 ? "Add Income" : "Add Expense"
         }
         return ""
+    }
+    
+    private func dismissKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }
 
