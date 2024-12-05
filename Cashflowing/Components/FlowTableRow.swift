@@ -64,5 +64,4 @@ struct FlowTableRow: View {
 #Preview {
     FlowTableRow(flow: Flow(amount: 100, description: "Concert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert paymentConcert payment"), locale: availableLocales[1].locale)
         .background(.income)
-        .previewLayout(.fixed(width: 400, height: 60))
 }

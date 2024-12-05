@@ -11,3 +11,8 @@ class GlobalValues {
     static let cornerRadius: CGFloat = 5
     static let defaultCurrency: String = "€"
 }
+
+enum FocusedField {
+    case searchbar
+    case newListEntry
+}

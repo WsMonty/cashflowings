@@ -9,12 +9,15 @@ import SwiftUI
 
 struct HomeView: View {
     @ObservedObject var store: FlowStore
-    @State var flows: [Flow] = []
     @State var isSettingsOpen: Bool = false
     @State var isSearchOpen: Bool = false
     @State var isDatePickerOpen: Bool = false
     @State var filteredDate: Date = Date()
     @State var isDateFilterActive: Bool = false
+    
+    @State var isListPickerOpen: Bool = false
+    @State var isConfirmationDialogOpen: Bool = false
+    @State var listNameToDelete: String = ""
     
     init(store: FlowStore) {
         self.store = store
@@ -22,6 +25,18 @@ struct HomeView: View {
     }
     
     var body: some View {
+        let flows: [Flow] = store.flows
+        let combinedFilters: [(Flow)->Bool] = [{
+            switch store.dataType {
+            case .allFlows:
+                $0.amount.isNormal
+            case .income:
+                $0.amount > 0
+            case .expenses:
+                $0.amount < 0
+            }
+        }, store.stringFilter, store.dateFilter, store.monthFilter, store.yearFilter]
+        
         NavigationStack {
             GeometryReader { geometry in
                 ZStack {
@@ -31,55 +46,40 @@ struct HomeView: View {
                             dismissKeyboard()
                         }
                     VStack(spacing: 0) {
-                        TotalAmount(flows: flows.filter {
-                            switch store.dataType {
-                            case .allFlows:
-                                $0.amount.isNormal
-                            case .income:
-                                $0.amount > 0
-                            case .expenses:
-                                $0.amount < 0
-                            }
-                        }.filter { flow in
-                            [store.stringFilter, store.dateFilter, store.monthFilter, store.yearFilter].allSatisfy { filter in
-                                    filter(flow)
+                        TotalAmount(flows: flows.filter { flow in
+                            combinedFilters.allSatisfy { filter in
+                                filter(flow)
                             }
                         }, locale: store.locale)
-                            .frame(width: geometry.size.width, height: geometry.size.height * 0.1)
-                        FlowsTableView(store: store, flows: flows.filter {
-                            switch store.dataType {
-                            case .allFlows:
-                                $0.amount.isNormal
-                            case .income:
-                                $0.amount > 0
-                            case .expenses:
-                                $0.amount < 0
-                            }
-                        }.filter { flow in
-                            [store.stringFilter, store.dateFilter, store.monthFilter, store.yearFilter].allSatisfy { filter in
-                                    filter(flow)
+                        .frame(width: geometry.size.width, height: geometry.size.height * 0.1)
+                        FlowsTableView(store: store, flows: flows.filter { flow in
+                            combinedFilters.allSatisfy { filter in
+                                filter(flow)
                             }
                         })
-                            .frame(width: geometry.size.width, height: geometry.size.height * 0.65)
+                        .frame(width: geometry.size.width, height: geometry.size.height * 0.65)
                         Divider()
                         AddNewFlow(store: store, isEditMode: false, isEditSheetOpen: .constant(false), editedFlow: .constant(Flow(amount: 0.00)))
                             .frame(width: geometry.size.width, height: geometry.size.height * 0.25)
                     }
                     .frame(width: geometry.size.width, height: geometry.size.height)
                     .toolbar {
-                        HStack {
-                            Button(action: { isSearchOpen = !isSearchOpen }) {
-                                Image(systemName: "magnifyingglass")
-                            }
-                            
-                            if isSearchOpen { Searchbar(isDatePickerOpen: $isDatePickerOpen, store: store, isDateFilterActive: $isDateFilterActive) }
-                            Spacer()
-                            Button(action: { isSettingsOpen = true }) {
-                                Image(systemName: "gear")
-                            }
-                            .foregroundColor(.mainText)
+                        HomeToolbar(store: store, isSearchOpen: $isSearchOpen, isDatePickerOpen: $isDatePickerOpen, isDateFilterActive: $isDateFilterActive, isSettingsOpen: $isSettingsOpen, isListPickerOpen: $isListPickerOpen, isConfirmationDialogOpen: $isConfirmationDialogOpen, listNameToDelete: $listNameToDelete)
+                            .zIndex(1)
+                    }
+                }
+                .overlay {
+                    if isListPickerOpen {
+                        ZStack {
+                            Color.black.opacity(0.3)
+                                .contentShape(Rectangle())
+                                .ignoresSafeArea()
+                                .onTapGesture {
+                                    isListPickerOpen = false
+                                }
+                            ListPickerModal(store: store, isListPickerOpen: $isListPickerOpen, isConfirmationDialogOpen: $isConfirmationDialogOpen, listNameToDelete: $listNameToDelete)
+                                .position(x: UIScreen.main.bounds.width / 2, y: 75)
                         }
-                        .frame(width: UIScreen.main.bounds.width - 20)
                     }
                 }
             }
@@ -91,17 +91,23 @@ struct HomeView: View {
         .background(.mainBG)
         .foregroundColor(.mainText)
         .overlay {
-            isDatePickerOpen ? CustomCalendarView(selected: $filteredDate, isDatePickerOpen: $isDatePickerOpen)
-                .position(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height * 0.23)
-                .zIndex(1)
-            : nil
+            if isDatePickerOpen {
+                ZStack {
+                    Color.black.opacity(0.3)
+                        .contentShape(Rectangle())
+                        .ignoresSafeArea()
+                        .onTapGesture {
+                            isDatePickerOpen = false
+                        }
+                    CustomCalendarView(selected: $filteredDate, isDatePickerOpen: $isDatePickerOpen)
+                        .position(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height * 0.23)
+                    .zIndex(1)
+                }
+            }
         }
         .onChange(of: filteredDate) {
             store.filterFlowsByDate(filter: filteredDate)
             isDateFilterActive = true
-        }
-        .onChange(of: store.flows) {
-            flows = store.flows
         }
     }
     

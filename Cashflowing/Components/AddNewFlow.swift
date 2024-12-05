@@ -7,17 +7,19 @@
 
 import SwiftUI
 
-private struct initalData {
+private struct initialData {
     static var amount: String = ""
     static var date: Date = Date()
     static var description: String = ""
+    static var list: String = ""
 }
 
 struct AddNewFlow: View {
     @ObservedObject var store: FlowStore
-    @State var amount: String = initalData.amount
-    @State var date: Date = initalData.date
-    @State var description: String = initalData.description
+    @State var amount: String = initialData.amount
+    @State var date: Date = initialData.date
+    @State var description: String = initialData.description
+    @State var list: String = initialData.list
     var isEditMode: Bool
     var oldFlow: Flow?
     @Binding var isEditSheetOpen: Bool
@@ -59,11 +61,14 @@ struct AddNewFlow: View {
                     .cornerRadius(GlobalValues.cornerRadius)
                     
                 }
-                TextField("Description", text: Binding(get: {description}, set: {description = String($0)}), onEditingChanged: { _ in isEditing = true })
-                    .padding(.horizontal, 15)
-                    .padding(.vertical, 10)
-                    .background(.greyBG)
-                    .cornerRadius(GlobalValues.cornerRadius)
+                HStack {
+                    TextField("Description", text: Binding(get: {description}, set: {description = String($0)}), onEditingChanged: { _ in isEditing = true })
+                        .padding(.horizontal, 15)
+                        .padding(.vertical, 10)
+                        .background(.greyBG)
+                        .cornerRadius(GlobalValues.cornerRadius)
+                    
+                }
                 
                 Spacer()
             }
@@ -119,9 +124,10 @@ struct AddNewFlow: View {
     }
     
     private func clearForm() {
-        amount = initalData.amount
-        description = initalData.description
-        date = initalData.date
+        amount = initialData.amount
+        description = initialData.description
+        date = initialData.date
+        list = initialData.list
         
         isEditing = false
         if !isEditMode {
@@ -148,24 +154,7 @@ struct AddNewFlow: View {
         return isEditing ? 250 : 200
     }
     
-    private func validateInput() {
-        let filtered = amount.filter { "0123456789.-,".contains($0) }
-        var result = filtered
-        if filtered.contains(",") {
-            let splitString = filtered.split(separator: ",")
-            let beforeComma = String(splitString[0])
-            let afterComma = splitString.count > 1 ? String(splitString[1].prefix(2)) : ""
-            result = "\(beforeComma),\(afterComma)"
-        }
-        if filtered.contains(".") {
-            let splitString = filtered.split(separator: ".")
-            let beforeComma = String(splitString[0])
-            let afterComma = splitString.count > 1 ? String(splitString[1].prefix(2)) : ""
-            result = "\(beforeComma).\(afterComma)"
-        }
-        
-        amount = result
-    }
+
     
     private func getBackgroundColor(isClearButton: Bool) -> Color {
         if isClearButton {
@@ -188,6 +177,25 @@ struct AddNewFlow: View {
     
     private func dismissKeyboard() {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+    
+    private func validateInput() {
+        let filtered = amount.filter { "0123456789.-,".contains($0) }
+        var result = filtered
+        if filtered.contains(",") {
+            let splitString = filtered.split(separator: ",")
+            let beforeComma = String(splitString[0])
+            let afterComma = splitString.count > 1 ? String(splitString[1].prefix(2)) : ""
+            result = "\(beforeComma),\(afterComma)"
+        }
+        if filtered.contains(".") {
+            let splitString = filtered.split(separator: ".")
+            let beforeComma = String(splitString[0])
+            let afterComma = splitString.count > 1 ? String(splitString[1].prefix(2)) : ""
+            result = "\(beforeComma).\(afterComma)"
+        }
+        
+        amount = result
     }
 }
 

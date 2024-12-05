@@ -86,30 +86,41 @@ struct DocumentPickerView: UIViewControllerRepresentable {
             picker.modalPresentationStyle = .formSheet
             return picker
         case .exportDocument:
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "dd.MM.yyyy-HH:mm:ss"
-            let currentDate = Date()
-            let dateString = dateFormatter.string(from: currentDate)
-            let tempDirectory = FileManager.default.temporaryDirectory
-            let tempFileURL = tempDirectory.appendingPathComponent("CashflowData_\(dateString).csv")
-            
-            var csvString = "Date,Amount,Description\n"
-            for flow in store.flows {
-                let line = "\(flow.dateString),\(flow.amountString),\(flow.description)\n"
-                csvString.append(line)
-            }
-            do {
-                try csvString.write(to: tempFileURL, atomically: true, encoding: .utf8)
-            } catch {
-                print("Failed to write temporary file: \(error)")
-            }
-            
-            let picker = UIDocumentPickerViewController(forExporting: [tempFileURL], asCopy: true)
-            picker.delegate = context.coordinator
-            picker.allowsMultipleSelection = false
-            picker.modalPresentationStyle = .formSheet
-            return picker
-        }
+               let fileManager = FileManager.default
+               do {
+                   let documentsURL = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+                   let fileName = "\(store.currentList).csv"
+                   let fileURL = documentsURL.appendingPathComponent(fileName)
+                   
+                   guard fileManager.fileExists(atPath: fileURL.path) else {
+                       print("File does not exist at path: \(fileURL.path)")
+                       return UIDocumentPickerViewController(forExporting: [])
+                   }
+                   
+                   // Generate the new title with the current date
+                   let dateFormatter = DateFormatter()
+                   dateFormatter.dateFormat = "dd.MM.yyyy-HH:mm:ss"
+                   let currentDate = Date()
+                   let dateString = dateFormatter.string(from: currentDate)
+                   let newFileName = "CashflowingData_\(store.currentList)_\(dateString).csv"
+                   let tempDirectory = FileManager.default.temporaryDirectory
+                   let tempFileURL = tempDirectory.appendingPathComponent(newFileName)
+                   
+                   // Copy the existing file to the temporary directory with the new name
+                   try fileManager.copyItem(at: fileURL, to: tempFileURL)
+                   
+                   // Pass the renamed file to the document picker
+                   let picker = UIDocumentPickerViewController(forExporting: [tempFileURL], asCopy: true)
+                   picker.delegate = context.coordinator
+                   picker.allowsMultipleSelection = false
+                   picker.modalPresentationStyle = .formSheet
+                   return picker
+                   
+               } catch {
+                   print("Error locating or copying file: \(error)")
+                   return UIDocumentPickerViewController(forExporting: [])
+               }
+           }
     }
     
     func updateUIViewController(_ uiViewController: UIDocumentPickerViewController, context: Context) {

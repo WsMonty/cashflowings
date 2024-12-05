@@ -15,8 +15,9 @@ struct StyledButton: View {
     var body: some View {
         Button(action: action) {
             Text(buttonText)
+                .font(.callout)
         }
-        .padding(20)
+        .padding(10)
         .background(.expense)
         .cornerRadius(GlobalValues.cornerRadius)
     }

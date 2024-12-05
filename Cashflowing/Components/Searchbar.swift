@@ -7,10 +7,6 @@
 
 import SwiftUI
 
-enum FocusedField {
-    case searchbar
-}
-
 struct Searchbar: View {
     @State var search: String = ""
     @Binding var isDatePickerOpen: Bool
@@ -29,8 +25,8 @@ struct Searchbar: View {
                 .focused($focusedField, equals: .searchbar)
                 .padding(.horizontal, 15)
                 .padding(.vertical, 5)
-                .background(.mainText.opacity(0.8))
-                .foregroundColor(.black)
+                .background(.greyBG)
+                .tint(.mainText)
                 .cornerRadius(GlobalValues.cornerRadius)
                 .frame(minWidth: UIScreen.main.bounds.width * 0.5)
                 .onChange(of: search) {

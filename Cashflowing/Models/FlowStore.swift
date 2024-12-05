@@ -16,7 +16,8 @@ enum DataType {
     case expenses
 }
 
-private var initalFilter: (Flow) -> Bool = { $0.amountString != "false" }
+private var initialFilter: (Flow) -> Bool = { $0.amountString != "false" }
+private var initialListFilter: (Flow) -> Bool = { $0.listName == "All" }
 
 @MainActor
 class FlowStore: ObservableObject {
@@ -25,23 +26,47 @@ class FlowStore: ObservableObject {
     @Published var dataType: DataType = .allFlows
     @Published var locale: Locale = .current
     
-    @Published var stringFilter: (Flow) -> Bool = initalFilter
-    @Published var dateFilter: (Flow) -> Bool = initalFilter
-    @Published var monthFilter: (Flow) -> Bool = initalFilter
-    @Published var yearFilter: (Flow) -> Bool = initalFilter
+    @Published var stringFilter: (Flow) -> Bool = initialFilter
+    @Published var dateFilter: (Flow) -> Bool = initialFilter
+    @Published var monthFilter: (Flow) -> Bool = initialFilter
+    @Published var yearFilter: (Flow) -> Bool = initialFilter
+    @Published var currentList: String = "All"
+    @Published var listNames: [String] = []
     
-    private static func getFileURL() throws -> URL {
+    private func getFileURL(listName: String? = nil) throws -> URL {
         let fileManager = FileManager.default
         let documentsURL = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
-        let fileURL = documentsURL.appendingPathComponent("Cashflow.csv")
+        
+        let fileName = (listName ?? currentList) + ".csv"
+        let fileURL = documentsURL.appendingPathComponent(fileName)
         return fileURL
+    }
+    
+    func getCSVFileNames() throws -> [String] {
+        let fileManager = FileManager.default
+        let documentsURL = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+        
+        // Get all files in the documents directory
+        let fileURLs = try fileManager.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil)
+        
+        // Filter CSV files and get their names without the ".csv" extension
+        let csvFileNames = fileURLs
+            .filter { $0.pathExtension == "csv" }
+            .map { $0.deletingPathExtension().lastPathComponent }
+        
+        return csvFileNames
     }
     
     func getFlows() async throws {
         do {
-            let fileURL = try Self.getFileURL()
+            let fileURL = try getFileURL()
             if !FileManager.default.fileExists(atPath: fileURL.path) {
                 try "".write(to: fileURL, atomically: true, encoding: .utf8)
+            }
+            
+            let fileNamesList = try getCSVFileNames()
+            if fileNamesList.count > 0 {
+                listNames = fileNamesList
             }
             
             let content = try String(contentsOf: fileURL, encoding: .utf8)
@@ -65,8 +90,7 @@ class FlowStore: ObservableObject {
                     loadedFlows.append(flow)
                 }
             }
-            
-            self.flows = loadedFlows.sorted(by: { $0.date < $1.date })
+            flows = loadedFlows.sorted(by: { $0.date < $1.date })
         } catch {
             print("Error loading or creating file: \(error)")
             throw error
@@ -75,14 +99,14 @@ class FlowStore: ObservableObject {
     
     func writeNewFlow(flow: Flow) async throws {
         let flowString = "\(flow.dateString),\(flow.amountString),\(flow.description)"
-        let fileURL = try Self.getFileURL()
+        let fileURL = try getFileURL()
         
         do {
             var fileContent = try String(contentsOf: fileURL, encoding: .utf8)
             fileContent.append("\r\n\(flowString)")
             try fileContent.write(to: fileURL, atomically: true, encoding: .utf8)
             
-            try await self.getFlows()
+            try await getFlows()
         } catch {
             print("Error updating file: \(error)")
         }
@@ -118,7 +142,7 @@ class FlowStore: ObservableObject {
     
     func filterFlows(filter: String) {
         if filter.isEmpty {
-            stringFilter = initalFilter
+            stringFilter = initialFilter
             return
         }
         
@@ -134,7 +158,7 @@ class FlowStore: ObservableObject {
     func filterFlowsByMonth(month: Int) {
         if month == -1 { return }
         if month == 0 {
-            monthFilter = initalFilter
+            monthFilter = initialFilter
             return
         }
         monthFilter = { Calendar.current.component(.month, from: $0.date) == month }
@@ -145,16 +169,25 @@ class FlowStore: ObservableObject {
         yearFilter = { Calendar.current.component(.year, from: $0.date) == year }
     }
     
+    func filterFlowsByList(listName: String) async throws {
+        currentList = listName
+        do  {
+            try await getFlows()
+        }
+        catch {
+            print("Error getting flows")
+        }
+    }
+    
     func removeAllFilters() {
-        stringFilter = initalFilter
-        dateFilter = initalFilter
-        monthFilter = initalFilter
-        yearFilter = initalFilter
-       // flows = unfilteredFlows
+        stringFilter = initialFilter
+        dateFilter = initialFilter
+        monthFilter = initialFilter
+        yearFilter = initialFilter
     }
     
     private func replaceCSVContent() throws {
-        let fileURL = try Self.getFileURL()
+        let fileURL = try getFileURL()
         
         var csvString = ""
         for flow in flows.sorted(by: { $0.date < $1.date }) {
@@ -179,5 +212,21 @@ class FlowStore: ObservableObject {
         }
         return .current
     }
+    
+    private func storeListNames(_ newList: [String]) {
+        listNames = ["All"] + newList
+    }
+    
+    func addNewList(listName: String) async throws {
+        do {
+            let fileURL = try getFileURL(listName: listName)
+            if !FileManager.default.fileExists(atPath: fileURL.path) {
+                try "".write(to: fileURL, atomically: true, encoding: .utf8)
+            }
+        }
+        catch {
+            print("Error loading or creating file: \(error)")
+            throw error
+        }
+    }
 }
-
