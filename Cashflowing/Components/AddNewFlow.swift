@@ -7,17 +7,19 @@
 
 import SwiftUI
 
-private struct initalData {
+private struct initialData {
     static var amount: String = ""
     static var date: Date = Date()
     static var description: String = ""
+    static var list: String = ""
 }
 
 struct AddNewFlow: View {
     @ObservedObject var store: FlowStore
-    @State var amount: String = initalData.amount
-    @State var date: Date = initalData.date
-    @State var description: String = initalData.description
+    @State var amount: String = initialData.amount
+    @State var date: Date = initialData.date
+    @State var description: String = initialData.description
+    @State var list: String = initialData.list
     var isEditMode: Bool
     var oldFlow: Flow?
     @Binding var isEditSheetOpen: Bool
@@ -59,11 +61,30 @@ struct AddNewFlow: View {
                     .cornerRadius(GlobalValues.cornerRadius)
                     
                 }
-                TextField("Description", text: Binding(get: {description}, set: {description = String($0)}), onEditingChanged: { _ in isEditing = true })
-                    .padding(.horizontal, 15)
-                    .padding(.vertical, 10)
+                HStack {
+                    TextField("Description", text: Binding(get: {description}, set: {description = String($0)}), onEditingChanged: { _ in isEditing = true })
+                        .frame(width: 250)
+                        .padding(.horizontal, 15)
+                        .padding(.vertical, 10)
+                        .background(.greyBG)
+                        .cornerRadius(GlobalValues.cornerRadius)
+                    Divider()
+                        .frame(height: 40)
+                    Menu {
+                        ForEach(store.listNames.filter { $0 != "All" }, id: \.self) { listItem in
+                            Button(action: { list = listItem }) {
+                                Text("\(listItem)")
+                            }
+                        }
+                    } label: {
+                        Text(list.isEmpty ? "List" : list)
+                    }
+                    .frame(width: 75)
+                    .padding(.vertical, 11)
+                    .padding(.horizontal, 20)
                     .background(.greyBG)
                     .cornerRadius(GlobalValues.cornerRadius)
+                }
                 
                 Spacer()
             }
@@ -119,9 +140,10 @@ struct AddNewFlow: View {
     }
     
     private func clearForm() {
-        amount = initalData.amount
-        description = initalData.description
-        date = initalData.date
+        amount = initialData.amount
+        description = initialData.description
+        date = initialData.date
+        list = initialData.list
         
         isEditing = false
         if !isEditMode {

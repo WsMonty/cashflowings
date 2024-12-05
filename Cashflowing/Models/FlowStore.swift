@@ -16,7 +16,8 @@ enum DataType {
     case expenses
 }
 
-private var initalFilter: (Flow) -> Bool = { $0.amountString != "false" }
+private var initialFilter: (Flow) -> Bool = { $0.amountString != "false" }
+private var initialListFilter: (Flow) -> Bool = { $0.listName == "main" }
 
 @MainActor
 class FlowStore: ObservableObject {
@@ -25,10 +26,12 @@ class FlowStore: ObservableObject {
     @Published var dataType: DataType = .allFlows
     @Published var locale: Locale = .current
     
-    @Published var stringFilter: (Flow) -> Bool = initalFilter
-    @Published var dateFilter: (Flow) -> Bool = initalFilter
-    @Published var monthFilter: (Flow) -> Bool = initalFilter
-    @Published var yearFilter: (Flow) -> Bool = initalFilter
+    @Published var stringFilter: (Flow) -> Bool = initialFilter
+    @Published var dateFilter: (Flow) -> Bool = initialFilter
+    @Published var monthFilter: (Flow) -> Bool = initialFilter
+    @Published var yearFilter: (Flow) -> Bool = initialFilter
+    @Published var currentList: String = "All"
+    @Published var listNames: [String] = []
     
     private static func getFileURL() throws -> URL {
         let fileManager = FileManager.default
@@ -118,7 +121,7 @@ class FlowStore: ObservableObject {
     
     func filterFlows(filter: String) {
         if filter.isEmpty {
-            stringFilter = initalFilter
+            stringFilter = initialFilter
             return
         }
         
@@ -134,7 +137,7 @@ class FlowStore: ObservableObject {
     func filterFlowsByMonth(month: Int) {
         if month == -1 { return }
         if month == 0 {
-            monthFilter = initalFilter
+            monthFilter = initialFilter
             return
         }
         monthFilter = { Calendar.current.component(.month, from: $0.date) == month }
@@ -145,12 +148,16 @@ class FlowStore: ObservableObject {
         yearFilter = { Calendar.current.component(.year, from: $0.date) == year }
     }
     
+    func filterFlowsByList(listName: String) {
+        UserDefaults.standard.set(listName, forKey: "currentList")
+        currentList = listName
+    }
+    
     func removeAllFilters() {
-        stringFilter = initalFilter
-        dateFilter = initalFilter
-        monthFilter = initalFilter
-        yearFilter = initalFilter
-       // flows = unfilteredFlows
+        stringFilter = initialFilter
+        dateFilter = initialFilter
+        monthFilter = initialFilter
+        yearFilter = initialFilter
     }
     
     private func replaceCSVContent() throws {
@@ -179,5 +186,63 @@ class FlowStore: ObservableObject {
         }
         return .current
     }
+    
+    private func storeListNames(_ newList: [String]) {
+        listNames = ["All"] + newList
+    }
+    
+    func getListNames() {
+        if let savedListNames = UserDefaults.standard.stringArray(forKey: "listNames") {
+            
+            storeListNames(savedListNames)
+        } else {
+            let uniqueListNames = Set(flows.map { $0.listName })
+            let listNamesArray = Array(uniqueListNames)
+            UserDefaults.standard.set(listNamesArray, forKey: "listNames")
+            
+            storeListNames(listNamesArray)
+        }
+        
+        if UserDefaults.standard.string(forKey: "currentList") == nil {
+            UserDefaults.standard.set("All", forKey: "currentList")
+        }
+    }
+    
+    func addNewList(listName: String) {
+        if let savedListNames = UserDefaults.standard.stringArray(forKey: "listNames") {
+            let newList = savedListNames + [listName]
+            
+            UserDefaults.standard.set(newList, forKey: "listNames")
+            storeListNames(newList)
+        } else {
+            let newList: [String] = Array(Set(flows.map { $0.listName })) + [listName]
+            
+            UserDefaults.standard.set(newList, forKey: "listNames")
+            storeListNames(newList)
+        }
+    }
+    
+    func changeListName(oldListName: String, newListName: String) {
+        if let savedListNames = UserDefaults.standard.stringArray(forKey: "listNames") {
+            
+            let newList = savedListNames.filter { $0 != oldListName } + [newListName]
+            
+            UserDefaults.standard.set(newList, forKey: "listNames")
+            storeListNames(newList)
+        }
+    }
+    
+    func deleteList(listName: String) {
+        if let savedListNames = UserDefaults.standard.stringArray(forKey: "listNames") {
+            let newList = savedListNames.filter { $0 != listName }
+            
+            UserDefaults.standard.set(newList, forKey: "listNames")
+            storeListNames(newList)
+        } else {
+            let newList: [String] = Array(Set(flows.map { $0.listName })).filter { $0 != listName }
+            
+            UserDefaults.standard.set(newList, forKey: "listNames")
+            storeListNames(newList)
+        }
+    }
 }
-

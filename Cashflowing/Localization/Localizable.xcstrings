@@ -95,6 +95,23 @@
         }
       }
     },
+    "addList" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Liste hinzufügen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add new list"
+          }
+        }
+      }
+    },
     "allFlows" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -178,6 +195,9 @@
           }
         }
       }
+    },
+    "cancel" : {
+
     },
     "Cancel" : {
       "localizations" : {
@@ -339,6 +359,9 @@
         }
       }
     },
+    "deleteList" : {
+
+    },
     "Description" : {
       "localizations" : {
         "de" : {
@@ -387,6 +410,9 @@
           }
         }
       }
+    },
+    "Do you want to delete the list \"%@\"?" : {
+
     },
     "done" : {
       "extractionState" : "manual",
@@ -593,6 +619,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "June"
+          }
+        }
+      }
+    },
+    "listName" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name der Liste..."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "List name..."
           }
         }
       }

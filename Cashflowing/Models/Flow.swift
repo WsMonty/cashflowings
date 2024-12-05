@@ -38,13 +38,15 @@ struct Flow: Identifiable, Codable, Hashable {
             getDescriptionEmoji(description: description.lowercased())
         }
     }
+    var listName: String
     
-    init(id: UUID = UUID(), amount: Double, currency: String = "€", date: Date = Date(), description: String = "") {
+    init(id: UUID = UUID(), amount: Double, currency: String = "€", date: Date = Date(), description: String = "", listName: String = "main" ) {
         self.id = id
         self.amount = amount
         self.currency = currency
         self.date = date
         self.description = description
+        self.listName = listName
     }
     
     func formatDateFromString(date: String) -> Date {
@@ -86,9 +88,9 @@ enum FlowType: String, Codable {
 
 extension Flow {
     static let sampleData: [Flow] = [
-        Flow(amount: 426.25, date: Date("15.05.2024")),
-        Flow(amount: 100.00, date: Date("21.03.2024"), description: "Concert"),
-        Flow(amount: 250.00, date: Date("22.03.2024"), description: "Concert"),
+        Flow(amount: 426.25, date: Date("15.05.2024"), listName: "Hobby"),
+        Flow(amount: 100.00, date: Date("21.03.2024"), description: "Concert", listName: "Hobby"),
+        Flow(amount: 250.00, date: Date("22.03.2024"), description: "Concert", listName: "Music"),
         Flow(amount: -35.50, date: Date("12.04.2024"), description: "Long description Long description Long description Long description Long description Long description Long description Long description Long description Long description Long description Long description Long description Long description Long description Long description Long description "),
         Flow(amount: -23.55, date: Date("25.07.2023")),
         Flow(amount: -100.00, date: Date("11.04.2023"), description: "Train ticket"),

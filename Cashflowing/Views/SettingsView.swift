@@ -23,6 +23,8 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading) {
+                AddNewList(store: store)
+                Divider()
                 LocaleSelector(store: store)
                 Divider()
                     .padding(5)
@@ -37,7 +39,7 @@ struct SettingsView: View {
                 Text("exportCVSExplanation")
                     .font(.caption)
                     .padding(.vertical, 10)
-    
+                
                 StyledButton(isSheetOpen: $showDocumentPicker, action: {
                     pickerMode = .importDocument
                     showDocumentPicker = true

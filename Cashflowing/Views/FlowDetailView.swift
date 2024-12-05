@@ -36,6 +36,10 @@ struct FlowDetailView: View {
                             Text("\(formatAmountString())")
                         }
                         HStack {
+                            Image(systemName: "list.bullet.below.rectangle")
+                            Text("\(usedFlow.listName)")
+                        }
+                        HStack {
                             if usedFlow.descriptionEmoji.isEmpty { Image(systemName: "info.square")} else {
                                 Text(usedFlow.descriptionEmoji) }
                             if usedFlow.description.isEmpty { Text(LocalizedStringKey("noDescription")) } else { Text("\(usedFlow.description)") }
