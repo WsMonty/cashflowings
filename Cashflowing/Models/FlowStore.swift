@@ -17,7 +17,7 @@ enum DataType {
 }
 
 private var initialFilter: (Flow) -> Bool = { $0.amountString != "false" }
-private var initialListFilter: (Flow) -> Bool = { $0.listName == "main" }
+private var initialListFilter: (Flow) -> Bool = { $0.listName == "All" }
 
 @MainActor
 class FlowStore: ObservableObject {
@@ -33,18 +33,40 @@ class FlowStore: ObservableObject {
     @Published var currentList: String = "All"
     @Published var listNames: [String] = []
     
-    private static func getFileURL() throws -> URL {
+    private func getFileURL(listName: String? = nil) throws -> URL {
         let fileManager = FileManager.default
         let documentsURL = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
-        let fileURL = documentsURL.appendingPathComponent("Cashflow.csv")
+        
+        let fileName = (listName ?? currentList) + ".csv"
+        let fileURL = documentsURL.appendingPathComponent(fileName)
         return fileURL
+    }
+    
+    func getCSVFileNames() throws -> [String] {
+        let fileManager = FileManager.default
+        let documentsURL = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+        
+        // Get all files in the documents directory
+        let fileURLs = try fileManager.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil)
+        
+        // Filter CSV files and get their names without the ".csv" extension
+        let csvFileNames = fileURLs
+            .filter { $0.pathExtension == "csv" }
+            .map { $0.deletingPathExtension().lastPathComponent }
+        
+        return csvFileNames
     }
     
     func getFlows() async throws {
         do {
-            let fileURL = try Self.getFileURL()
+            let fileURL = try getFileURL()
             if !FileManager.default.fileExists(atPath: fileURL.path) {
                 try "".write(to: fileURL, atomically: true, encoding: .utf8)
+            }
+            
+            let fileNamesList = try getCSVFileNames()
+            if fileNamesList.count > 0 {
+                listNames = fileNamesList
             }
             
             let content = try String(contentsOf: fileURL, encoding: .utf8)
@@ -68,8 +90,7 @@ class FlowStore: ObservableObject {
                     loadedFlows.append(flow)
                 }
             }
-            
-            self.flows = loadedFlows.sorted(by: { $0.date < $1.date })
+            flows = loadedFlows.sorted(by: { $0.date < $1.date })
         } catch {
             print("Error loading or creating file: \(error)")
             throw error
@@ -78,14 +99,14 @@ class FlowStore: ObservableObject {
     
     func writeNewFlow(flow: Flow) async throws {
         let flowString = "\(flow.dateString),\(flow.amountString),\(flow.description)"
-        let fileURL = try Self.getFileURL()
+        let fileURL = try getFileURL()
         
         do {
             var fileContent = try String(contentsOf: fileURL, encoding: .utf8)
             fileContent.append("\r\n\(flowString)")
             try fileContent.write(to: fileURL, atomically: true, encoding: .utf8)
             
-            try await self.getFlows()
+            try await getFlows()
         } catch {
             print("Error updating file: \(error)")
         }
@@ -148,9 +169,14 @@ class FlowStore: ObservableObject {
         yearFilter = { Calendar.current.component(.year, from: $0.date) == year }
     }
     
-    func filterFlowsByList(listName: String) {
-        UserDefaults.standard.set(listName, forKey: "currentList")
+    func filterFlowsByList(listName: String) async throws {
         currentList = listName
+        do  {
+            try await getFlows()
+        }
+        catch {
+            print("Error getting flows")
+        }
     }
     
     func removeAllFilters() {
@@ -161,7 +187,7 @@ class FlowStore: ObservableObject {
     }
     
     private func replaceCSVContent() throws {
-        let fileURL = try Self.getFileURL()
+        let fileURL = try getFileURL()
         
         var csvString = ""
         for flow in flows.sorted(by: { $0.date < $1.date }) {
@@ -191,58 +217,16 @@ class FlowStore: ObservableObject {
         listNames = ["All"] + newList
     }
     
-    func getListNames() {
-        if let savedListNames = UserDefaults.standard.stringArray(forKey: "listNames") {
-            
-            storeListNames(savedListNames)
-        } else {
-            let uniqueListNames = Set(flows.map { $0.listName })
-            let listNamesArray = Array(uniqueListNames)
-            UserDefaults.standard.set(listNamesArray, forKey: "listNames")
-            
-            storeListNames(listNamesArray)
+    func addNewList(listName: String) async throws {
+        do {
+            let fileURL = try getFileURL(listName: listName)
+            if !FileManager.default.fileExists(atPath: fileURL.path) {
+                try "".write(to: fileURL, atomically: true, encoding: .utf8)
+            }
         }
-        
-        if UserDefaults.standard.string(forKey: "currentList") == nil {
-            UserDefaults.standard.set("All", forKey: "currentList")
-        }
-    }
-    
-    func addNewList(listName: String) {
-        if let savedListNames = UserDefaults.standard.stringArray(forKey: "listNames") {
-            let newList = savedListNames + [listName]
-            
-            UserDefaults.standard.set(newList, forKey: "listNames")
-            storeListNames(newList)
-        } else {
-            let newList: [String] = Array(Set(flows.map { $0.listName })) + [listName]
-            
-            UserDefaults.standard.set(newList, forKey: "listNames")
-            storeListNames(newList)
-        }
-    }
-    
-    func changeListName(oldListName: String, newListName: String) {
-        if let savedListNames = UserDefaults.standard.stringArray(forKey: "listNames") {
-            
-            let newList = savedListNames.filter { $0 != oldListName } + [newListName]
-            
-            UserDefaults.standard.set(newList, forKey: "listNames")
-            storeListNames(newList)
-        }
-    }
-    
-    func deleteList(listName: String) {
-        if let savedListNames = UserDefaults.standard.stringArray(forKey: "listNames") {
-            let newList = savedListNames.filter { $0 != listName }
-            
-            UserDefaults.standard.set(newList, forKey: "listNames")
-            storeListNames(newList)
-        } else {
-            let newList: [String] = Array(Set(flows.map { $0.listName })).filter { $0 != listName }
-            
-            UserDefaults.standard.set(newList, forKey: "listNames")
-            storeListNames(newList)
+        catch {
+            print("Error loading or creating file: \(error)")
+            throw error
         }
     }
 }

@@ -24,8 +24,18 @@ struct AddNewList: View {
                         .background(.greyBG)
                         .tint(.mainText)
                         .cornerRadius(GlobalValues.cornerRadius)
-               
-                    Button(action: { store.addNewList(listName: newListName); isEntryOpen = false; newListName = "" }) {
+                    
+                    Button(action: {
+                        Task {
+                            do {
+                                try await store.addNewList(listName: newListName)
+                                isEntryOpen = false
+                                newListName = ""
+                            } catch {
+                                print("Failed to add new list: \(error)")
+                            }
+                        }
+                    }) {
                         Image(systemName: "checkmark.square")
                             .font(.title2)
                     }

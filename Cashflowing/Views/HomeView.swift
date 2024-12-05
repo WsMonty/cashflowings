@@ -26,7 +26,6 @@ struct HomeView: View {
     
     var body: some View {
         let flows: [Flow] = store.flows
-        let currentList: String = UserDefaults.standard.string(forKey: "currentList") ?? "All"
         let combinedFilters: [(Flow)->Bool] = [{
             switch store.dataType {
             case .allFlows:
@@ -36,11 +35,7 @@ struct HomeView: View {
             case .expenses:
                 $0.amount < 0
             }
-        }, store.stringFilter, store.dateFilter, store.monthFilter, store.yearFilter, {
-            if currentList == "All" { return true }
-            
-            return $0.listName == currentList
-        }]
+        }, store.stringFilter, store.dateFilter, store.monthFilter, store.yearFilter]
         
         NavigationStack {
             GeometryReader { geometry in

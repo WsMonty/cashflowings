@@ -15,17 +15,20 @@ struct ListPickerModal: View {
     
     var body: some View {
         VStack(spacing: 10) {
-            ForEach(Array(store.listNames.enumerated()), id: \.element) { index, list in
+            ForEach(Array(store.listNames.sorted().enumerated()), id: \.element) { index, list in
                 HStack {
-                    Button(action: { store.filterFlowsByList(listName: list); isListPickerOpen = false }) {
-                        Text(list)
-                    }
+                    Button(action: {
+                        Task {
+                            do{ try await store.filterFlowsByList(listName: list); isListPickerOpen = false } catch {print("Failed to filter Lists")}}}) {
+                                Text(list)
+                            }
                     Spacer()
                     Button(action: { listNameToDelete = list; isConfirmationDialogOpen = true }) {
                         Image(systemName: "minus.square.fill")
                     }
                     .buttonStyle(BorderlessButtonStyle())
                     .font(.title3)
+                    
                 }
                 if index != store.listNames.count - 1 { Divider().background(.mainText) }
             }
@@ -38,7 +41,7 @@ struct ListPickerModal: View {
         .cornerRadius(GlobalValues.cornerRadius)
         .confirmationDialog("Do you want to delete the list \"\(listNameToDelete)\"?", isPresented: $isConfirmationDialogOpen, titleVisibility: .visible) {
             Button("deleteList", role: .destructive) {
-                store.deleteList(listName: listNameToDelete)
+               // TODO
                 isConfirmationDialogOpen = false
                 listNameToDelete = ""
             }

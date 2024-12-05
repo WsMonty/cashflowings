@@ -63,27 +63,11 @@ struct AddNewFlow: View {
                 }
                 HStack {
                     TextField("Description", text: Binding(get: {description}, set: {description = String($0)}), onEditingChanged: { _ in isEditing = true })
-                        .frame(width: 250)
                         .padding(.horizontal, 15)
                         .padding(.vertical, 10)
                         .background(.greyBG)
                         .cornerRadius(GlobalValues.cornerRadius)
-                    Divider()
-                        .frame(height: 40)
-                    Menu {
-                        ForEach(store.listNames.filter { $0 != "All" }, id: \.self) { listItem in
-                            Button(action: { list = listItem }) {
-                                Text("\(listItem)")
-                            }
-                        }
-                    } label: {
-                        Text(list.isEmpty ? "List" : list)
-                    }
-                    .frame(width: 75)
-                    .padding(.vertical, 11)
-                    .padding(.horizontal, 20)
-                    .background(.greyBG)
-                    .cornerRadius(GlobalValues.cornerRadius)
+                    
                 }
                 
                 Spacer()
@@ -170,24 +154,7 @@ struct AddNewFlow: View {
         return isEditing ? 250 : 200
     }
     
-    private func validateInput() {
-        let filtered = amount.filter { "0123456789.-,".contains($0) }
-        var result = filtered
-        if filtered.contains(",") {
-            let splitString = filtered.split(separator: ",")
-            let beforeComma = String(splitString[0])
-            let afterComma = splitString.count > 1 ? String(splitString[1].prefix(2)) : ""
-            result = "\(beforeComma),\(afterComma)"
-        }
-        if filtered.contains(".") {
-            let splitString = filtered.split(separator: ".")
-            let beforeComma = String(splitString[0])
-            let afterComma = splitString.count > 1 ? String(splitString[1].prefix(2)) : ""
-            result = "\(beforeComma).\(afterComma)"
-        }
-        
-        amount = result
-    }
+
     
     private func getBackgroundColor(isClearButton: Bool) -> Color {
         if isClearButton {
@@ -210,6 +177,25 @@ struct AddNewFlow: View {
     
     private func dismissKeyboard() {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+    
+    private func validateInput() {
+        let filtered = amount.filter { "0123456789.-,".contains($0) }
+        var result = filtered
+        if filtered.contains(",") {
+            let splitString = filtered.split(separator: ",")
+            let beforeComma = String(splitString[0])
+            let afterComma = splitString.count > 1 ? String(splitString[1].prefix(2)) : ""
+            result = "\(beforeComma),\(afterComma)"
+        }
+        if filtered.contains(".") {
+            let splitString = filtered.split(separator: ".")
+            let beforeComma = String(splitString[0])
+            let afterComma = splitString.count > 1 ? String(splitString[1].prefix(2)) : ""
+            result = "\(beforeComma).\(afterComma)"
+        }
+        
+        amount = result
     }
 }
 

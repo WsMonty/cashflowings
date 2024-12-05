@@ -15,17 +15,13 @@ struct ListFilter: View {
     
     
     var body: some View {
-        let currentList = UserDefaults.standard.string(forKey: "currentList")
         
         ZStack {
             Button(action: { isListPickerOpen = !isListPickerOpen }) {
                 HStack {
                     Image(systemName: "list.bullet.below.rectangle")
-                    Text(currentList ?? "All")
+                    Text(store.currentList)
                 }
-            }
-            .onAppear {
-                store.getListNames()
             }
             Spacer()
         }
