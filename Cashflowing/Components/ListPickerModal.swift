@@ -15,7 +15,7 @@ struct ListPickerModal: View {
     
     var body: some View {
         VStack(spacing: 10) {
-            ForEach(Array(store.listNames.sorted().enumerated()), id: \.element) { index, list in
+            ForEach(Array(store.listNames.sorted(by: { $0 == "Main" ? true : ($1 == "Main" ? false : $0 < $1) }).enumerated()), id: \.element) { index, list in
                 HStack {
                     Button(action: {
                         Task {
@@ -23,12 +23,13 @@ struct ListPickerModal: View {
                                 Text(list)
                             }
                     Spacer()
-                    Button(action: { listNameToDelete = list; isConfirmationDialogOpen = true }) {
-                        Image(systemName: "minus.square.fill")
+                    if list != "Main" {
+                        Button(action: { listNameToDelete = list; isConfirmationDialogOpen = true }) {
+                            Image(systemName: "minus.square.fill")
+                        }
+                        .buttonStyle(BorderlessButtonStyle())
+                        .font(.title3)
                     }
-                    .buttonStyle(BorderlessButtonStyle())
-                    .font(.title3)
-                    
                 }
                 if index != store.listNames.count - 1 { Divider().background(.mainText) }
             }
@@ -41,9 +42,17 @@ struct ListPickerModal: View {
         .cornerRadius(GlobalValues.cornerRadius)
         .confirmationDialog("Do you want to delete the list \"\(listNameToDelete)\"?", isPresented: $isConfirmationDialogOpen, titleVisibility: .visible) {
             Button("deleteList", role: .destructive) {
-               // TODO
-                isConfirmationDialogOpen = false
-                listNameToDelete = ""
+                Task {
+                    do {
+                       try await store.deleteCSVFile(named: listNameToDelete)
+                        isConfirmationDialogOpen = false
+                        listNameToDelete = ""
+                    }
+                    catch {
+                        print("Could not delete list")
+                        throw error
+                    }
+                }
             }
             Button("cancel", role: .cancel) {
                 isConfirmationDialogOpen = false

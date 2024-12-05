@@ -197,7 +197,14 @@
       }
     },
     "cancel" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abbrechen"
+          }
+        }
+      }
     },
     "Cancel" : {
       "localizations" : {
@@ -360,7 +367,20 @@
       }
     },
     "deleteList" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Liste löschen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete list"
+          }
+        }
+      }
     },
     "Description" : {
       "localizations" : {
@@ -412,7 +432,20 @@
       }
     },
     "Do you want to delete the list \"%@\"?" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Willst du die Liste \"%@\" löschen? Alle Einträge in dieser Liste werden dadurch gelöscht!"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Do you want to delete the list \"%@\"? All flows in this list will be deleted!"
+          }
+        }
+      }
     },
     "done" : {
       "extractionState" : "manual",

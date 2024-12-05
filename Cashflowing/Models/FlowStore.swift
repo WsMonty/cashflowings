@@ -30,7 +30,7 @@ class FlowStore: ObservableObject {
     @Published var dateFilter: (Flow) -> Bool = initialFilter
     @Published var monthFilter: (Flow) -> Bool = initialFilter
     @Published var yearFilter: (Flow) -> Bool = initialFilter
-    @Published var currentList: String = "All"
+    @Published var currentList: String = "Main"
     @Published var listNames: [String] = []
     
     private func getFileURL(listName: String? = nil) throws -> URL {
@@ -223,9 +223,37 @@ class FlowStore: ObservableObject {
             if !FileManager.default.fileExists(atPath: fileURL.path) {
                 try "".write(to: fileURL, atomically: true, encoding: .utf8)
             }
+            try await getFlows()
         }
         catch {
             print("Error loading or creating file: \(error)")
+            throw error
+        }
+    }
+    
+    func deleteCSVFile(named fileName: String) async throws {
+        // Add the ".csv" extension to the file name
+        let fileWithExtension = "\(fileName).csv"
+        do {
+        // Get the directory path from getFlows()
+            let fileURL = try getFileURL(listName: fileName)
+        if !FileManager.default.fileExists(atPath: fileURL.path) {
+            return
+        }
+
+        let fileManager = FileManager.default
+            // Check if the file exists
+            print("route: \(fileURL.path)")
+            if fileManager.fileExists(atPath: fileURL.path) {
+                // Attempt to delete the file
+                try fileManager.removeItem(atPath: fileURL.path)
+                print("File '\(fileWithExtension)' deleted successfully.")
+            } else {
+                print("File '\(fileWithExtension)' does not exist.")
+            }
+           try await getFlows()
+        } catch {
+            print("Error deleting file '\(fileWithExtension)': \(error)")
             throw error
         }
     }
